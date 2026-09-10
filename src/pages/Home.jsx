@@ -31,14 +31,15 @@ function Home() {
           <p className="eyebrow">THE ONCHAIN BOUNTY MARKETPLACE</p>
 
           <h1>
-            Get work done.
+            BaseBounty
             <br />
-            Earn for great work.
+            Get work done. Earn for great work.
           </h1>
 
           <p className="dashboard-hero-text">
-            BaseBounty connects clients and contributors through
-            transparent work agreements and onchain rewards.
+            BaseBounty is a bounty marketplace on Base that connects
+            clients and contributors through transparent work agreements,
+            onchain rewards, and secure escrow.
           </p>
 
           <div className="dashboard-hero-actions">
@@ -88,9 +89,11 @@ function Home() {
 
         <div className="dashboard-stat">
           <span>MY BOUNTIES</span>
-          <strong>{bounties.filter(
-            (bounty) => !String(bounty.id).startsWith('demo-')
-          ).length}</strong>
+          <strong>
+            {bounties.filter(
+              (bounty) => !String(bounty.id).startsWith('demo-')
+            ).length}
+          </strong>
           <p>Bounties you created</p>
         </div>
 
@@ -224,12 +227,13 @@ function Home() {
 
         <div className="dashboard-section-heading">
           <div>
-            <p className="eyebrow">MARKETPLACE</p>
+            <p className="eyebrow">BASEBOUNTY MARKETPLACE</p>
 
             <h2>Open bounties.</h2>
 
             <p>
-              Find work that matches your skills and interests.
+              Find work that matches your skills and interests
+              on the BaseBounty bounty marketplace.
             </p>
           </div>
 
@@ -250,7 +254,7 @@ function Home() {
             <h3>No open bounties yet.</h3>
 
             <p>
-              Create the first bounty and start the marketplace.
+              Create the first bounty and start the BaseBounty marketplace.
             </p>
 
             <Link
@@ -292,6 +296,7 @@ function Home() {
 
                   <div>
                     <span>REWARD</span>
+
                     <strong>
                       {bounty.reward} USDC
                     </strong>
@@ -382,7 +387,9 @@ function Home() {
 
           <div className="dashboard-step">
             <span>01</span>
+
             <h3>Create</h3>
+
             <p>
               A client creates a bounty with a clear
               task and reward.
@@ -391,7 +398,9 @@ function Home() {
 
           <div className="dashboard-step">
             <span>02</span>
+
             <h3>Apply</h3>
+
             <p>
               Contributors discover the opportunity
               and send an application.
@@ -400,7 +409,9 @@ function Home() {
 
           <div className="dashboard-step">
             <span>03</span>
+
             <h3>Complete</h3>
+
             <p>
               The selected contributor completes the
               requested work.
@@ -409,7 +420,9 @@ function Home() {
 
           <div className="dashboard-step">
             <span>04</span>
+
             <h3>Get Paid</h3>
+
             <p>
               The client reviews the submission and
               approves the reward.
@@ -436,7 +449,8 @@ function Home() {
         </div>
 
         <p>
-          The onchain marketplace for meaningful work.
+          BaseBounty is the onchain bounty marketplace
+          for meaningful work on Base.
         </p>
 
       </footer>
