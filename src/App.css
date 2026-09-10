@@ -4679,3 +4679,86 @@ html[data-theme="dark"] .live-badge {
   color: #bdbdbd !important;
   border-color: #333 !important;
 }
+/* =========================================================
+   SIDEBAR LAYOUT — NEVER OVERLAP PAGE CONTENT
+   ========================================================= */
+
+@media (min-width: 901px) {
+  .app > main {
+    margin-left: 250px !important;
+    width: calc(100% - 270px) !important;
+    max-width: none !important;
+  }
+
+  /* Settings already has its own left spacing */
+  .app > main.settings-page {
+    margin-left: 0 !important;
+    width: auto !important;
+    max-width: none !important;
+  }
+}
+
+/* Medium laptop screens */
+
+@media (min-width: 701px) and (max-width: 1200px) {
+  .app > main {
+    margin-left: 230px !important;
+    width: calc(100% - 250px) !important;
+    max-width: none !important;
+  }
+
+  .app > main.settings-page {
+    margin-left: 0 !important;
+    width: auto !important;
+  }
+}
+
+/* Mobile / small screens */
+
+@media (max-width: 700px) {
+  .app > main {
+    margin-left: 0 !important;
+    width: 100% !important;
+  }
+
+  .app > main.settings-page {
+    margin-left: 0 !important;
+    width: 100% !important;
+  }
+}
+/* =========================================================
+   SIDEBAR CONTENT SPACING
+   ========================================================= */
+
+@media (min-width: 901px) {
+  .app > main {
+    margin-left: 250px !important;
+    width: calc(100% - 270px) !important;
+    max-width: none !important;
+  }
+
+  .app > main.settings-page {
+    margin-left: 0 !important;
+    width: auto !important;
+  }
+}
+
+@media (min-width: 701px) and (max-width: 900px) {
+  .app > main {
+    margin-left: 220px !important;
+    width: calc(100% - 240px) !important;
+    max-width: none !important;
+  }
+
+  .app > main.settings-page {
+    margin-left: 0 !important;
+    width: auto !important;
+  }
+}
+
+@media (max-width: 700px) {
+  .app > main {
+    margin-left: 0 !important;
+    width: 100% !important;
+  }
+}
