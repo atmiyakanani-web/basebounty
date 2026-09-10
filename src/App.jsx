@@ -1,5 +1,6 @@
 import { BrowserRouter, Routes, Route } from 'react-router-dom'
 import Navbar from './components/layout/Navbar'
+import Sidebar from './components/layout/Sidebar'
 
 import Home from './pages/Home.jsx'
 import CreateBounty from './pages/CreateBounty.jsx'
@@ -13,6 +14,7 @@ import SubmitWork from './pages/SubmitWork.jsx'
 import MyBounties from './pages/MyBounties.jsx'
 import HireSomeone from './pages/HireSomeone.jsx'
 import NotFound from './pages/NotFound.jsx'
+import Settings from './pages/Settings.jsx'
 
 import './App.css'
 
@@ -21,53 +23,22 @@ function App() {
     <BrowserRouter>
       <div className="app">
         <Navbar />
+        <Sidebar />
 
         <Routes>
           <Route path="/" element={<Home />} />
-          <Route
-            path="/bounty/:id/submit"
-            element={<SubmitWork />}
-          />
-          <Route
-            path="/my-bounties"
-            element={<MyBounties />}
-          />
-          <Route
-            path="/create"
-            element={<CreateBounty />}
-          />
-          <Route
-            path="/find-work"
-            element={<FindWork />}
-          />
-          <Route
-            path="/hire"
-            element={<HireSomeone />}
-          />
-          <Route
-            path="/explore"
-            element={<ExploreBounties />}
-          />
-          <Route
-            path="/bounty/:id"
-            element={<BountyDetails />}
-          />
-          <Route
-            path="/bounty/:id/apply"
-            element={<ApplyBounty />}
-          />
-          <Route
-            path="/bounty/:id/manage"
-            element={<ManageBounty />}
-          />
-          <Route
-            path="/review"
-            element={<ReviewBounty />}
-          />
-          <Route
-            path="*"
-            element={<NotFound />}
-          />
+          <Route path="/bounty/:id/submit" element={<SubmitWork />} />
+          <Route path="/my-bounties" element={<MyBounties />} />
+          <Route path="/create" element={<CreateBounty />} />
+          <Route path="/find-work" element={<FindWork />} />
+          <Route path="/hire" element={<HireSomeone />} />
+          <Route path="/explore" element={<ExploreBounties />} />
+          <Route path="/bounty/:id" element={<BountyDetails />} />
+          <Route path="/bounty/:id/apply" element={<ApplyBounty />} />
+          <Route path="/bounty/:id/manage" element={<ManageBounty />} />
+          <Route path="/review" element={<ReviewBounty />} />
+          <Route path="/settings" element={<Settings />} />
+          <Route path="*" element={<NotFound />} />
         </Routes>
       </div>
     </BrowserRouter>
