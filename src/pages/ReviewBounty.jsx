@@ -5,7 +5,6 @@ import {
   getDraft,
   clearDraft,
 } from '../lib/bountyStorage'
-import { fundAndCreateBounty, explorerTxUrl } from '../lib/contract'
 import './ReviewBounty.css'
 
 function ReviewBounty() {
@@ -14,7 +13,6 @@ function ReviewBounty() {
   const [bounty, setBounty] = useState(null)
   const [creating, setCreating] = useState(false)
   const [error, setError] = useState('')
-  const [txHash, setTxHash] = useState('')
 
   useEffect(() => {
     setBounty(getDraft())
@@ -68,47 +66,26 @@ function ReviewBounty() {
 
   const reward = bounty.reward || '0'
 
-  const handleCreateBounty = async () => {
+  const handleCreateBounty = () => {
     if (creating) return
 
     setError('')
-    setTxHash('')
     setCreating(true)
 
     try {
-      if (!window.ethereum) {
-        throw new Error('Connect your wallet before publishing a bounty.')
-      }
-
-      const recipientAddress =
-        bounty.recipientType === 'wallet' && bounty.wallet
-          ? bounty.wallet
-          : '0x0000000000000000000000000000000000000000'
-
-      const result = await fundAndCreateBounty({
-        reward,
-        recipient: recipientAddress,
-        provider: window.ethereum,
-      })
-
       const createdBounty = createLocalBounty({
         ...bounty,
         bountyType: bounty.bountyType || 'website',
-        onchain: true,
-        chainId: 84532,
-        contractAddress: import.meta.env.VITE_BOUNTY_ESCROW_ADDRESS || '',
-        bountyId: result.bountyId,
-        approveTxHash: result.approveTxHash,
-        createTxHash: result.createTxHash,
-        explorerUrl: explorerTxUrl(result.createTxHash),
+        onchain: false,
+        network: 'Base',
+        escrow: 'Smart Contract',
       })
 
       clearDraft()
       navigate(`/bounty/${createdBounty.id}`)
     } catch (err) {
       console.error(err)
-      setError(err?.reason || err?.shortMessage || err?.message || 'Transaction failed. Please try again.')
-      setTxHash('')
+      setError('Could not publish the bounty. Please try again.')
       setCreating(false)
     }
   }
@@ -225,9 +202,9 @@ function ReviewBounty() {
               </strong>
 
               <p>
-                Your bounty is designed to use
-                Base escrow to secure the reward
-                until the work is completed.
+                Base escrow is ready to secure
+                bounty rewards when blockchain
+                payments are enabled.
               </p>
             </div>
 
@@ -320,20 +297,9 @@ function ReviewBounty() {
             <span>→</span>
           </button>
 
-          {txHash && (
-            <a
-              className="review-tx-link"
-              href={explorerTxUrl(txHash)}
-              target="_blank"
-              rel="noreferrer"
-            >
-              View transaction on BaseScan →
-            </a>
-          )}
-
           <p className="wallet-note">
-            Publishing requires a Base Sepolia wallet and USDC approval.
-            The reward is locked in the escrow contract after confirmation.
+            Your bounty will be added to the
+            BaseBounty marketplace.
           </p>
 
         </aside>
