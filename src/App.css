@@ -4501,3 +4501,181 @@ html[data-theme="dark"] .network-badge {
 html[data-theme="dark"] .secure-badge {
   color: #8ed49a !important;
 }
+/* =========================================================
+   HOME / DASHBOARD DARK MODE FIX
+   ========================================================= */
+
+html[data-theme="dark"] .home-page,
+html[data-theme="dark"] .dashboard-page {
+  background: #0b0b0b !important;
+  color: #f5f5f5 !important;
+}
+
+/* Hero */
+
+html[data-theme="dark"] .hero {
+  background: #0b0b0b !important;
+  color: #f5f5f5 !important;
+}
+
+html[data-theme="dark"] .hero h1,
+html[data-theme="dark"] .hero h2,
+html[data-theme="dark"] .hero h3 {
+  color: #ffffff !important;
+}
+
+html[data-theme="dark"] .hero p {
+  color: #a8a8a8 !important;
+}
+
+/* Hero preview card */
+
+html[data-theme="dark"] .hero-card {
+  background: #171717 !important;
+  border-color: #2d2d2d !important;
+  color: #ffffff !important;
+}
+
+html[data-theme="dark"] .hero-card * {
+  color: #ffffff !important;
+}
+
+html[data-theme="dark"] .hero-card p {
+  color: #999 !important;
+}
+
+/* Stats */
+
+html[data-theme="dark"] .stats {
+  background: transparent !important;
+}
+
+html[data-theme="dark"] .stat-card {
+  background: #171717 !important;
+  border-color: #2d2d2d !important;
+  color: #ffffff !important;
+}
+
+html[data-theme="dark"] .stat-card * {
+  color: #ffffff !important;
+}
+
+html[data-theme="dark"] .stat-card span {
+  color: #999 !important;
+}
+
+/* Dashboard sections */
+
+html[data-theme="dark"] .dashboard-section,
+html[data-theme="dark"] .dashboard-section * {
+  color: #f5f5f5 !important;
+}
+
+html[data-theme="dark"] .dashboard-section {
+  background: transparent !important;
+}
+
+/* Action cards */
+
+html[data-theme="dark"] .action-card,
+html[data-theme="dark"] .dashboard-card,
+html[data-theme="dark"] .choice-card {
+  background: #171717 !important;
+  border-color: #2d2d2d !important;
+  color: #f5f5f5 !important;
+}
+
+html[data-theme="dark"] .action-card *,
+html[data-theme="dark"] .dashboard-card *,
+html[data-theme="dark"] .choice-card * {
+  color: #f5f5f5 !important;
+}
+
+html[data-theme="dark"] .action-card p,
+html[data-theme="dark"] .dashboard-card p,
+html[data-theme="dark"] .choice-card p {
+  color: #999 !important;
+}
+
+/* Bounty cards on Home */
+
+html[data-theme="dark"] .bounty-grid .bounty-card,
+html[data-theme="dark"] .bounty-list .bounty-card {
+  background: #171717 !important;
+  border-color: #2d2d2d !important;
+  color: #f5f5f5 !important;
+}
+
+html[data-theme="dark"] .bounty-grid .bounty-card *,
+html[data-theme="dark"] .bounty-list .bounty-card * {
+  color: #f5f5f5 !important;
+}
+
+html[data-theme="dark"] .bounty-grid .bounty-card p,
+html[data-theme="dark"] .bounty-list .bounty-card p {
+  color: #999 !important;
+}
+
+/* Manage section */
+
+html[data-theme="dark"] .manage-section,
+html[data-theme="dark"] .manage-card {
+  background: #151515 !important;
+  border-color: #2d2d2d !important;
+  color: #f5f5f5 !important;
+}
+
+html[data-theme="dark"] .manage-section *,
+html[data-theme="dark"] .manage-card * {
+  color: #f5f5f5 !important;
+}
+
+/* Section headings */
+
+html[data-theme="dark"] .section-heading h2,
+html[data-theme="dark"] .section-heading h3 {
+  color: #ffffff !important;
+}
+
+html[data-theme="dark"] .section-heading p {
+  color: #999 !important;
+}
+
+/* Feature / how-it-works cards */
+
+html[data-theme="dark"] .feature,
+html[data-theme="dark"] .feature-card,
+html[data-theme="dark"] .step-card,
+html[data-theme="dark"] .info-card {
+  background: #171717 !important;
+  border-color: #2d2d2d !important;
+  color: #f5f5f5 !important;
+}
+
+html[data-theme="dark"] .feature *,
+html[data-theme="dark"] .feature-card *,
+html[data-theme="dark"] .step-card *,
+html[data-theme="dark"] .info-card * {
+  color: #f5f5f5 !important;
+}
+
+html[data-theme="dark"] .feature p,
+html[data-theme="dark"] .feature-card p,
+html[data-theme="dark"] .step-card p,
+html[data-theme="dark"] .info-card p {
+  color: #999 !important;
+}
+
+/* Dividers */
+
+html[data-theme="dark"] .dashboard-section {
+  border-color: #303030 !important;
+}
+
+/* Live badge */
+
+html[data-theme="dark"] .live-badge {
+  background: #202020 !important;
+  color: #bdbdbd !important;
+  border-color: #333 !important;
+}
