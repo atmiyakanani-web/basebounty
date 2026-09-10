@@ -4762,3 +4762,41 @@ html[data-theme="dark"] .live-badge {
     width: 100% !important;
   }
 }
+:root {
+  --bb-bg: #ffffff;
+  --bb-text: #111111;
+}
+
+html[data-theme="dark"] {
+  --bb-bg: #0b0b0b;
+  --bb-text: #ffffff;
+}
+
+html,
+body,
+#root,
+.app {
+  background-color: var(--bb-bg) !important;
+  color: var(--bb-text) !important;
+}
+
+.app * {
+  color: var(--bb-text);
+}
+
+.app a {
+  color: var(--bb-text);
+}
+
+.app input,
+.app textarea,
+.app select {
+  background-color: var(--bb-bg);
+  color: var(--bb-text);
+}
+
+.app input::placeholder,
+.app textarea::placeholder {
+  color: var(--bb-text);
+  opacity: 0.55;
+}
