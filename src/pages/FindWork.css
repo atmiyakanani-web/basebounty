@@ -1,0 +1,313 @@
+.find-work-page {
+  padding-bottom: 80px;
+}
+
+.find-work-header {
+  max-width: 1240px;
+  margin: 0 auto;
+  padding: 80px 32px 65px;
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 40px;
+}
+
+.find-work-header h1 {
+  margin: 12px 0 18px;
+  font-size: clamp(55px, 7vw, 88px);
+  line-height: 0.95;
+  letter-spacing: -0.055em;
+}
+
+.find-work-header p:not(.eyebrow) {
+  max-width: 650px;
+  color: #777;
+  line-height: 1.7;
+  font-size: 17px;
+}
+
+.pending-work-section {
+  max-width: 1240px;
+  margin: 0 auto;
+  padding: 0 32px 75px;
+}
+
+.pending-work-heading {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+  gap: 30px;
+  margin-bottom: 30px;
+}
+
+.pending-work-heading h2,
+.find-work-marketplace-heading h2 {
+  margin: 8px 0 10px;
+  font-size: 40px;
+  line-height: 1;
+  letter-spacing: -0.045em;
+}
+
+.pending-work-heading p:not(.eyebrow) {
+  margin: 0;
+  color: #777;
+}
+
+.pending-work-heading > span,
+.find-work-marketplace-heading > span {
+  font-size: 11px;
+  font-weight: 700;
+  color: #777;
+  white-space: nowrap;
+}
+
+.pending-work-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 16px;
+}
+
+.pending-work-card {
+  background: #111;
+  color: white;
+  padding: 30px;
+}
+
+.pending-work-top {
+  display: flex;
+  justify-content: space-between;
+  gap: 20px;
+  font-size: 10px;
+}
+
+.pending-work-top span {
+  color: #aaa;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+}
+
+.pending-work-top strong {
+  font-size: 10px;
+}
+
+.pending-work-card h2 {
+  margin: 30px 0 12px;
+  font-size: 29px;
+  line-height: 1.05;
+  letter-spacing: -0.035em;
+}
+
+.pending-work-card > p {
+  color: #aaa;
+  line-height: 1.6;
+  margin: 0;
+}
+
+.pending-work-meta {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 15px;
+  margin-top: 28px;
+  padding-top: 22px;
+  border-top: 1px solid #333;
+}
+
+.pending-work-meta span,
+.find-work-card-meta span {
+  display: block;
+  font-size: 9px;
+  letter-spacing: 0.1em;
+  color: #888;
+  font-weight: 700;
+}
+
+.pending-work-meta strong,
+.find-work-card-meta strong {
+  display: block;
+  margin-top: 5px;
+  font-size: 16px;
+}
+
+.pending-work-actions {
+  display: flex;
+  gap: 10px;
+  margin-top: 25px;
+  flex-wrap: wrap;
+}
+
+.pending-work-note {
+  margin-top: 22px;
+  padding-top: 18px;
+  border-top: 1px solid #333;
+  color: #aaa;
+  font-size: 12px;
+}
+
+.pending-work-note span {
+  margin-left: 8px;
+  color: #777;
+}
+
+.find-work-marketplace {
+  max-width: 1240px;
+  margin: 0 auto;
+  padding: 70px 32px 0;
+  border-top: 1px solid #ddd;
+}
+
+.find-work-marketplace-heading {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+  gap: 30px;
+  margin-bottom: 30px;
+}
+
+.find-work-toolbar {
+  display: grid;
+  grid-template-columns: 1fr 230px;
+  gap: 12px;
+  margin-bottom: 30px;
+}
+
+.find-work-toolbar input,
+.find-work-toolbar select {
+  min-height: 52px;
+  border: 1px solid #d5d5d5;
+  background: white;
+  padding: 0 16px;
+  font: inherit;
+  outline: none;
+}
+
+.find-work-toolbar input:focus,
+.find-work-toolbar select:focus {
+  border-color: #111;
+}
+
+.find-work-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 16px;
+}
+
+.find-work-card {
+  border: 1px solid #ddd;
+  background: white;
+  padding: 25px;
+  min-height: 315px;
+  display: flex;
+  flex-direction: column;
+}
+
+.find-work-card-top {
+  display: flex;
+  justify-content: space-between;
+  gap: 15px;
+}
+
+.find-work-card-top span {
+  font-size: 10px;
+  color: #777;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+}
+
+.find-work-card-top strong {
+  font-size: 10px;
+}
+
+.find-work-card h2 {
+  margin: 27px 0 12px;
+  font-size: 24px;
+  line-height: 1.05;
+  letter-spacing: -0.035em;
+}
+
+.find-work-card > p {
+  margin: 0;
+  color: #777;
+  font-size: 14px;
+  line-height: 1.6;
+}
+
+.find-work-card-meta {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 15px;
+  margin-top: auto;
+  padding-top: 20px;
+  border-top: 1px solid #eee;
+}
+
+.find-work-card-actions {
+  margin-top: 22px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+}
+
+.find-work-card-actions > a:first-child {
+  color: #111;
+  text-decoration: none;
+  font-weight: 700;
+  font-size: 13px;
+}
+
+.already-applied {
+  padding: 10px 14px;
+  background: #f0f0ed;
+  color: #555;
+  font-size: 12px;
+  font-weight: 700;
+}
+
+@media (max-width: 900px) {
+  .find-work-header {
+    align-items: flex-start;
+    flex-direction: column;
+  }
+
+  .pending-work-grid,
+  .find-work-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .find-work-toolbar {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 600px) {
+  .find-work-header,
+  .pending-work-section,
+  .find-work-marketplace {
+    padding-left: 20px;
+    padding-right: 20px;
+  }
+
+  .find-work-header {
+    padding-top: 55px;
+  }
+
+  .find-work-header h1 {
+    font-size: 55px;
+  }
+
+  .pending-work-heading,
+  .find-work-marketplace-heading {
+    align-items: flex-start;
+    flex-direction: column;
+  }
+
+  .pending-work-card {
+    padding: 24px;
+  }
+
+  .find-work-card {
+    min-height: 290px;
+  }
+}

@@ -1,0 +1,399 @@
+.my-bounties-page {
+  padding-bottom: 90px;
+}
+
+.my-bounties-header {
+  max-width: 1240px;
+  margin: 0 auto;
+  padding: 80px 32px 65px;
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 40px;
+}
+
+.my-bounties-header h1 {
+  margin: 12px 0 18px;
+  font-size: clamp(55px, 7vw, 88px);
+  line-height: 0.95;
+  letter-spacing: -0.055em;
+}
+
+.my-bounties-header p:not(.eyebrow) {
+  max-width: 680px;
+  margin: 0;
+  color: #777;
+  font-size: 17px;
+  line-height: 1.7;
+}
+
+.my-bounties-stats {
+  max-width: 1240px;
+  margin: 0 auto;
+  padding: 0 32px;
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  border-top: 1px solid #ddd;
+  border-bottom: 1px solid #ddd;
+}
+
+.my-bounty-stat {
+  padding: 25px 22px;
+  border-right: 1px solid #ddd;
+}
+
+.my-bounty-stat:first-child {
+  padding-left: 0;
+}
+
+.my-bounty-stat:last-child {
+  border-right: 0;
+}
+
+.my-bounty-stat span {
+  display: block;
+  font-size: 9px;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  color: #888;
+}
+
+.my-bounty-stat strong {
+  display: block;
+  margin-top: 10px;
+  font-size: 36px;
+  line-height: 1;
+  letter-spacing: -0.04em;
+}
+
+.my-bounty-stat p {
+  margin: 8px 0 0;
+  color: #888;
+  font-size: 12px;
+}
+
+.my-bounties-list-section {
+  max-width: 1240px;
+  margin: 0 auto;
+  padding: 75px 32px 0;
+}
+
+.my-bounties-section-heading {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+  gap: 30px;
+  margin-bottom: 30px;
+}
+
+.my-bounties-section-heading h2 {
+  margin: 8px 0 0;
+  font-size: 40px;
+  line-height: 1;
+  letter-spacing: -0.045em;
+}
+
+.my-bounties-section-heading > span {
+  color: #777;
+  font-size: 11px;
+  font-weight: 700;
+  white-space: nowrap;
+}
+
+.my-bounties-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 16px;
+}
+
+.my-bounty-card {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  min-height: 430px;
+  padding: 30px;
+  border: 1px solid #ddd;
+  background: #fff;
+}
+
+.my-bounty-card-top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 20px;
+}
+
+.my-bounty-card-top > span {
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  color: #777;
+  text-transform: uppercase;
+}
+
+.my-bounty-status {
+  font-size: 10px;
+  white-space: nowrap;
+}
+
+.my-bounty-card h2 {
+  margin: 28px 0 12px;
+  font-size: 29px;
+  line-height: 1.05;
+  letter-spacing: -0.035em;
+}
+
+.my-bounty-description {
+  margin: 0;
+  color: #777;
+  font-size: 14px;
+  line-height: 1.65;
+}
+
+.my-bounty-meta {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 15px;
+  margin-top: auto;
+  padding-top: 25px;
+  border-top: 1px solid #eee;
+}
+
+.my-bounty-meta span {
+  display: block;
+  font-size: 8px;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  color: #999;
+}
+
+.my-bounty-meta strong {
+  display: block;
+  margin-top: 6px;
+  font-size: 13px;
+}
+
+.my-bounty-card-note {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  margin-top: 22px;
+  padding: 15px 16px;
+  background: #f5f5f2;
+}
+
+.my-bounty-card-note strong {
+  font-size: 12px;
+}
+
+.my-bounty-card-note span {
+  color: #777;
+  font-size: 11px;
+  line-height: 1.5;
+}
+
+.my-bounty-note-attention {
+  background: #111;
+  color: #fff;
+}
+
+.my-bounty-note-attention span {
+  color: #aaa;
+}
+
+.my-bounty-note-complete {
+  background: #f0f0ed;
+}
+
+.my-bounty-actions {
+  display: flex;
+  gap: 10px;
+  margin-top: 22px;
+}
+
+.my-bounty-actions .button {
+  flex: 1;
+  justify-content: center;
+}
+
+.my-bounty-delete {
+  align-self: flex-start;
+  margin-top: 15px;
+  padding: 0;
+  border: 0;
+  background: transparent;
+  color: #999;
+  font-size: 11px;
+  font-weight: 600;
+  text-decoration: underline;
+  cursor: pointer;
+}
+
+.my-bounty-delete:hover {
+  color: #111;
+}
+
+.my-bounties-empty {
+  min-height: 390px;
+  padding: 55px 30px;
+  border: 1px solid #ddd;
+  background: #fff;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+}
+
+.my-bounties-empty-mark {
+  width: 58px;
+  height: 58px;
+  margin-bottom: 25px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: #111;
+  color: #fff;
+  font-size: 22px;
+  font-weight: 800;
+}
+
+.my-bounties-empty h2 {
+  margin: 8px 0 12px;
+  font-size: 36px;
+  letter-spacing: -0.04em;
+}
+
+.my-bounties-empty > p:not(.eyebrow) {
+  max-width: 500px;
+  margin: 0 0 25px;
+  color: #777;
+  line-height: 1.6;
+}
+
+.my-bounties-bottom {
+  max-width: 1240px;
+  margin: 80px auto 0;
+  padding: 45px 32px;
+  background: #111;
+  color: #fff;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 35px;
+}
+
+.my-bounties-bottom .eyebrow {
+  color: #999;
+}
+
+.my-bounties-bottom h2 {
+  margin: 8px 0 10px;
+  font-size: 34px;
+  letter-spacing: -0.04em;
+}
+
+.my-bounties-bottom p:not(.eyebrow) {
+  margin: 0;
+  color: #aaa;
+  line-height: 1.6;
+}
+
+.my-bounties-bottom .button-dark {
+  background: #fff;
+  color: #111;
+  flex-shrink: 0;
+}
+
+@media (max-width: 950px) {
+  .my-bounties-stats {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .my-bounty-stat {
+    border-bottom: 1px solid #ddd;
+  }
+
+  .my-bounty-stat:nth-child(2) {
+    border-right: 0;
+  }
+
+  .my-bounty-stat:nth-child(3),
+  .my-bounty-stat:nth-child(4) {
+    border-bottom: 0;
+  }
+
+  .my-bounties-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 700px) {
+  .my-bounties-header {
+    padding-top: 55px;
+    align-items: flex-start;
+    flex-direction: column;
+  }
+
+  .my-bounties-header h1 {
+    font-size: 55px;
+  }
+
+  .my-bounties-stats {
+    padding: 0 20px;
+  }
+
+  .my-bounty-stat {
+    padding: 20px 15px;
+  }
+
+  .my-bounty-stat:first-child {
+    padding-left: 0;
+  }
+
+  .my-bounties-list-section {
+    padding-left: 20px;
+    padding-right: 20px;
+  }
+
+  .my-bounties-section-heading {
+    align-items: flex-start;
+    flex-direction: column;
+  }
+
+  .my-bounty-meta {
+    grid-template-columns: 1fr 1fr;
+  }
+
+  .my-bounty-card {
+    min-height: 0;
+    padding: 24px;
+  }
+
+  .my-bounty-actions {
+    flex-direction: column;
+  }
+
+  .my-bounties-bottom {
+    margin-top: 60px;
+    padding: 35px 20px;
+    align-items: flex-start;
+    flex-direction: column;
+  }
+}
+
+@media (max-width: 450px) {
+  .my-bounties-stats {
+    grid-template-columns: 1fr 1fr;
+  }
+
+  .my-bounty-stat strong {
+    font-size: 30px;
+  }
+
+  .my-bounty-card-top {
+    align-items: flex-start;
+    flex-direction: column;
+    gap: 10px;
+  }
+}
