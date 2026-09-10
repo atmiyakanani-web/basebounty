@@ -4780,14 +4780,6 @@ body,
   color: var(--bb-text) !important;
 }
 
-.app * {
-  color: var(--bb-text);
-}
-
-.app a {
-  color: var(--bb-text);
-}
-
 .app input,
 .app textarea,
 .app select {
@@ -4799,4 +4791,119 @@ body,
 .app textarea::placeholder {
   color: var(--bb-text);
   opacity: 0.55;
+}
+/* =========================================================
+   BASEBOUNTY THEME — LIGHT + DARK
+   ========================================================= */
+
+html,
+body,
+#root {
+  background: #ffffff;
+  color: #111111;
+}
+
+/* DARK MODE */
+
+html[data-theme="dark"],
+html[data-theme="dark"] body,
+html[data-theme="dark"] #root,
+html[data-theme="dark"] .app {
+  background: #0b0b0b !important;
+  color: #f5f5f5 !important;
+}
+
+/* Dark mode text */
+
+html[data-theme="dark"] .app h1,
+html[data-theme="dark"] .app h2,
+html[data-theme="dark"] .app h3,
+html[data-theme="dark"] .app h4,
+html[data-theme="dark"] .app h5,
+html[data-theme="dark"] .app h6,
+html[data-theme="dark"] .app p,
+html[data-theme="dark"] .app label {
+  color: #f5f5f5 !important;
+}
+
+/* Dark mode links */
+
+html[data-theme="dark"] .app a {
+  color: #f5f5f5;
+}
+
+/* Dark mode inputs */
+
+html[data-theme="dark"] .app input,
+html[data-theme="dark"] .app textarea,
+html[data-theme="dark"] .app select {
+  background: #171717 !important;
+  color: #f5f5f5 !important;
+  border-color: #333 !important;
+}
+
+html[data-theme="dark"] .app input::placeholder,
+html[data-theme="dark"] .app textarea::placeholder {
+  color: #888 !important;
+}
+
+/* Dark cards */
+
+html[data-theme="dark"] .app .card,
+html[data-theme="dark"] .app .bounty-card,
+html[data-theme="dark"] .app .feature-card,
+html[data-theme="dark"] .app .stat-card,
+html[data-theme="dark"] .app .action-card,
+html[data-theme="dark"] .app .dashboard-card {
+  background: #171717 !important;
+  color: #f5f5f5 !important;
+  border-color: #2d2d2d !important;
+}
+
+/* Dark card text */
+
+html[data-theme="dark"] .app .card h1,
+html[data-theme="dark"] .app .card h2,
+html[data-theme="dark"] .app .card h3,
+html[data-theme="dark"] .app .card p,
+html[data-theme="dark"] .app .bounty-card h1,
+html[data-theme="dark"] .app .bounty-card h2,
+html[data-theme="dark"] .app .bounty-card h3,
+html[data-theme="dark"] .app .bounty-card p,
+html[data-theme="dark"] .app .feature-card h3,
+html[data-theme="dark"] .app .feature-card p {
+  color: #f5f5f5 !important;
+}
+
+/* Dark sidebar */
+
+html[data-theme="dark"] .app-sidebar {
+  background: #141414 !important;
+  border-color: #2c2c2c !important;
+}
+
+html[data-theme="dark"] .sidebar-item {
+  color: #aaa !important;
+}
+
+html[data-theme="dark"] .sidebar-item:hover {
+  background: #242424 !important;
+  color: #fff !important;
+}
+
+html[data-theme="dark"] .sidebar-item.active {
+  background: #fff !important;
+  color: #111 !important;
+}
+
+/* Dark settings */
+
+html[data-theme="dark"] .settings-card {
+  background: #151515 !important;
+  border-color: #2b2b2b !important;
+}
+
+html[data-theme="dark"] .settings-section,
+html[data-theme="dark"] .settings-row {
+  border-color: #2b2b2b !important;
 }
