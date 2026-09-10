@@ -4090,3 +4090,414 @@ html[data-theme="dark"] .sidebar-item.active {
 html[data-theme="dark"] .sidebar-bottom {
   border-color: #2a2a2a;
 }
+/* =========================================================
+   BASEBOUNTY GLOBAL DARK MODE
+   ========================================================= */
+
+html[data-theme="dark"] {
+  background: #0b0b0b;
+  color-scheme: dark;
+}
+
+html[data-theme="dark"],
+html[data-theme="dark"] body,
+html[data-theme="dark"] #root,
+html[data-theme="dark"] .app {
+  background: #0b0b0b;
+  color: #f5f5f5;
+}
+
+html[data-theme="dark"] body {
+  color: #f5f5f5;
+}
+
+/* Navbar */
+
+html[data-theme="dark"] .navbar {
+  background: #0b0b0b !important;
+  border-color: #292929 !important;
+}
+
+html[data-theme="dark"] .navbar a,
+html[data-theme="dark"] .navbar button,
+html[data-theme="dark"] .nav-link {
+  color: #d5d5d5;
+}
+
+html[data-theme="dark"] .navbar a:hover,
+html[data-theme="dark"] .navbar button:hover,
+html[data-theme="dark"] .nav-link:hover {
+  color: #fff;
+}
+
+/* Main pages */
+
+html[data-theme="dark"] main,
+html[data-theme="dark"] section {
+  color: #f5f5f5;
+}
+
+/* Headings */
+
+html[data-theme="dark"] h1,
+html[data-theme="dark"] h2,
+html[data-theme="dark"] h3,
+html[data-theme="dark"] h4,
+html[data-theme="dark"] strong {
+  color: #f5f5f5;
+}
+
+/* Paragraphs */
+
+html[data-theme="dark"] p,
+html[data-theme="dark"] span {
+  color: inherit;
+}
+
+/* Cards */
+
+html[data-theme="dark"] .card,
+html[data-theme="dark"] .bounty-card,
+html[data-theme="dark"] .form-card,
+html[data-theme="dark"] .details-card,
+html[data-theme="dark"] .hero-card,
+html[data-theme="dark"] .stat-card,
+html[data-theme="dark"] .feature-card,
+html[data-theme="dark"] .review-card,
+html[data-theme="dark"] .payment-card,
+html[data-theme="dark"] .receipt-card {
+  background: #171717 !important;
+  color: #f5f5f5;
+  border-color: #2d2d2d !important;
+}
+
+/* Inputs */
+
+html[data-theme="dark"] input,
+html[data-theme="dark"] textarea,
+html[data-theme="dark"] select {
+  background: #171717 !important;
+  color: #f5f5f5 !important;
+  border-color: #363636 !important;
+}
+
+html[data-theme="dark"] input::placeholder,
+html[data-theme="dark"] textarea::placeholder {
+  color: #777;
+}
+
+/* Secondary buttons */
+
+html[data-theme="dark"] .secondary-button {
+  background: #171717 !important;
+  color: #f5f5f5 !important;
+  border-color: #3a3a3a !important;
+}
+
+/* Sidebar */
+
+html[data-theme="dark"] .app-sidebar {
+  background: #141414 !important;
+  border-color: #2c2c2c !important;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.35);
+}
+
+html[data-theme="dark"] .sidebar-item {
+  color: #aaa;
+}
+
+html[data-theme="dark"] .sidebar-item:hover {
+  background: #242424;
+  color: #fff;
+}
+
+html[data-theme="dark"] .sidebar-item.active {
+  background: #f5f5f5;
+  color: #111;
+}
+
+html[data-theme="dark"] .sidebar-bottom {
+  border-color: #2c2c2c;
+}
+
+/* Settings */
+
+html[data-theme="dark"] .settings-page {
+  background: #0b0b0b;
+  color: #f5f5f5;
+}
+
+html[data-theme="dark"] .settings-header p:last-child,
+html[data-theme="dark"] .settings-section p,
+html[data-theme="dark"] .settings-row p {
+  color: #999;
+}
+
+html[data-theme="dark"] .settings-card {
+  background: #151515 !important;
+  border-color: #2b2b2b !important;
+}
+
+html[data-theme="dark"] .settings-section,
+html[data-theme="dark"] .settings-row {
+  border-color: #2b2b2b;
+}
+
+html[data-theme="dark"] .theme-option {
+  background: #1e1e1e;
+  color: #f5f5f5;
+  border-color: #353535;
+}
+
+html[data-theme="dark"] .theme-option:hover {
+  border-color: #666;
+}
+
+html[data-theme="dark"] .theme-option.selected {
+  background: #f5f5f5;
+  color: #111;
+  border-color: #f5f5f5;
+}
+
+html[data-theme="dark"] .theme-option.selected small {
+  color: #666;
+}
+
+html[data-theme="dark"] .theme-icon {
+  background: #303030;
+}
+
+html[data-theme="dark"] .theme-option.selected .theme-icon {
+  background: #ddd;
+}
+
+/* Borders / separators */
+
+html[data-theme="dark"] hr {
+  border-color: #2c2c2c;
+}
+
+/* Links */
+
+html[data-theme="dark"] a {
+  color: #d5d5d5;
+}
+
+/* Dark page backgrounds used by common layouts */
+
+html[data-theme="dark"] .create-page,
+html[data-theme="dark"] .explore-page,
+html[data-theme="dark"] .my-bounties-page,
+html[data-theme="dark"] .details-page,
+html[data-theme="dark"] .review-page,
+html[data-theme="dark"] .apply-page,
+html[data-theme="dark"] .manage-page,
+html[data-theme="dark"] .submit-page,
+html[data-theme="dark"] .find-work-page,
+html[data-theme="dark"] .hire-page {
+  background: #0b0b0b !important;
+  color: #f5f5f5;
+}
+ /* =========================================================
+    BASEBOUNTY DARK MODE — TEXT VISIBILITY FIX
+    ========================================================= */
+
+html[data-theme="dark"] .app {
+  color: #f5f5f5 !important;
+}
+
+/* Force normal text to become light */
+
+html[data-theme="dark"] .app h1,
+html[data-theme="dark"] .app h2,
+html[data-theme="dark"] .app h3,
+html[data-theme="dark"] .app h4,
+html[data-theme="dark"] .app h5,
+html[data-theme="dark"] .app h6,
+html[data-theme="dark"] .app p,
+html[data-theme="dark"] .app span,
+html[data-theme="dark"] .app label,
+html[data-theme="dark"] .app li,
+html[data-theme="dark"] .app td,
+html[data-theme="dark"] .app th,
+html[data-theme="dark"] .app strong,
+html[data-theme="dark"] .app b {
+  color: #f5f5f5 !important;
+}
+
+/* Links */
+
+html[data-theme="dark"] .app a {
+  color: #e5e5e5 !important;
+}
+
+/* Muted / secondary text */
+
+html[data-theme="dark"] .app .eyebrow,
+html[data-theme="dark"] .app .subtitle,
+html[data-theme="dark"] .app .description,
+html[data-theme="dark"] .app .form-help,
+html[data-theme="dark"] .app .help-text,
+html[data-theme="dark"] .app .muted,
+html[data-theme="dark"] .app .secondary-text,
+html[data-theme="dark"] .app .settings-header p,
+html[data-theme="dark"] .app .settings-section p,
+html[data-theme="dark"] .app .settings-row p {
+  color: #a8a8a8 !important;
+}
+
+/* Inputs */
+
+html[data-theme="dark"] .app input,
+html[data-theme="dark"] .app textarea,
+html[data-theme="dark"] .app select {
+  background: #171717 !important;
+  color: #f5f5f5 !important;
+  border-color: #383838 !important;
+}
+
+html[data-theme="dark"] .app input::placeholder,
+html[data-theme="dark"] .app textarea::placeholder {
+  color: #777 !important;
+}
+
+/* Cards */
+
+html[data-theme="dark"] .app .card,
+html[data-theme="dark"] .app .bounty-card,
+html[data-theme="dark"] .app .form-card,
+html[data-theme="dark"] .app .details-card,
+html[data-theme="dark"] .app .review-card,
+html[data-theme="dark"] .app .payment-card,
+html[data-theme="dark"] .app .receipt-card,
+html[data-theme="dark"] .app .feature-card,
+html[data-theme="dark"] .app .stat-card {
+  background: #171717 !important;
+  color: #f5f5f5 !important;
+  border-color: #2d2d2d !important;
+}
+
+/* Card text */
+
+html[data-theme="dark"] .app .card *,
+html[data-theme="dark"] .app .bounty-card *,
+html[data-theme="dark"] .app .form-card *,
+html[data-theme="dark"] .app .details-card *,
+html[data-theme="dark"] .app .review-card *,
+html[data-theme="dark"] .app .payment-card *,
+html[data-theme="dark"] .app .receipt-card *,
+html[data-theme="dark"] .app .feature-card *,
+html[data-theme="dark"] .app .stat-card * {
+  color: #f5f5f5 !important;
+}
+
+/* Keep muted card text slightly softer */
+
+html[data-theme="dark"] .app .card p,
+html[data-theme="dark"] .app .bounty-card p,
+html[data-theme="dark"] .app .form-card p,
+html[data-theme="dark"] .app .details-card p {
+  color: #a8a8a8 !important;
+}
+
+/* Navbar */
+
+html[data-theme="dark"] .navbar,
+html[data-theme="dark"] .navbar * {
+  color: #f5f5f5 !important;
+}
+
+html[data-theme="dark"] .navbar {
+  background: #0b0b0b !important;
+  border-color: #292929 !important;
+}
+
+/* Sidebar */
+
+html[data-theme="dark"] .app-sidebar {
+  background: #141414 !important;
+  border-color: #2c2c2c !important;
+}
+
+html[data-theme="dark"] .sidebar-item {
+  color: #aaa !important;
+}
+
+html[data-theme="dark"] .sidebar-item:hover {
+  color: #fff !important;
+  background: #242424 !important;
+}
+
+html[data-theme="dark"] .sidebar-item.active {
+  color: #111 !important;
+  background: #f5f5f5 !important;
+}
+
+html[data-theme="dark"] .sidebar-item.active * {
+  color: #111 !important;
+}
+
+/* Settings theme buttons */
+
+html[data-theme="dark"] .theme-option {
+  color: #f5f5f5 !important;
+  background: #1e1e1e !important;
+  border-color: #353535 !important;
+}
+
+html[data-theme="dark"] .theme-option * {
+  color: #f5f5f5 !important;
+}
+
+html[data-theme="dark"] .theme-option small {
+  color: #999 !important;
+}
+
+html[data-theme="dark"] .theme-option.selected {
+  background: #f5f5f5 !important;
+  color: #111 !important;
+}
+
+html[data-theme="dark"] .theme-option.selected * {
+  color: #111 !important;
+}
+
+html[data-theme="dark"] .theme-option.selected small {
+  color: #666 !important;
+}
+
+/* Buttons */
+
+html[data-theme="dark"] .app button {
+  color: #f5f5f5;
+}
+
+html[data-theme="dark"] .app .primary-button {
+  color: #fff !important;
+  background: #f5f5f5;
+}
+
+html[data-theme="dark"] .app .primary-button * {
+  color: #111 !important;
+}
+
+html[data-theme="dark"] .app .secondary-button {
+  color: #f5f5f5 !important;
+  background: #171717 !important;
+  border-color: #3a3a3a !important;
+}
+
+/* Badges */
+
+html[data-theme="dark"] .coming-soon {
+  color: #aaa !important;
+  background: #292929 !important;
+}
+
+html[data-theme="dark"] .network-badge {
+  color: #8bbcff !important;
+}
+
+html[data-theme="dark"] .secure-badge {
+  color: #8ed49a !important;
+}
