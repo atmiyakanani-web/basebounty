@@ -21,13 +21,15 @@ function CreateBounty() {
   }
 
   const goToReview = () => {
+    const draft = {
+      ...formData,
+      recipientType: recipientType || 'open',
+      bountyType: bountyType || 'website',
+    }
+
     localStorage.setItem(
       'basebounty_draft',
-      JSON.stringify({
-        ...formData,
-        recipientType,
-        bountyType,
-      })
+      JSON.stringify(draft)
     )
 
     window.location.href = '/review'
@@ -97,15 +99,15 @@ function CreateBounty() {
 
             <div className="form-divider" />
 
-            {/* BOUNTY TYPE */}
-
             <div className="form-section">
               <div className="form-section-title">
                 <span>02</span>
 
                 <div>
                   <h2>Work type</h2>
-                  <p>Choose what kind of work the contributor will submit.</p>
+                  <p>
+                    Choose what kind of work the contributor will submit.
+                  </p>
                 </div>
               </div>
 
@@ -122,7 +124,9 @@ function CreateBounty() {
 
                   <span>
                     <strong>Website</strong>
-                    <small>Submit a live website or web project</small>
+                    <small>
+                      Submit a live website or web project
+                    </small>
                   </span>
 
                   {bountyType === 'website' && <b>✓</b>}
@@ -139,7 +143,9 @@ function CreateBounty() {
 
                   <span>
                     <strong>Development</strong>
-                    <small>Submit code, repository, and demo</small>
+                    <small>
+                      Submit code, repository, and demo
+                    </small>
                   </span>
 
                   {bountyType === 'development' && <b>✓</b>}
@@ -156,7 +162,9 @@ function CreateBounty() {
 
                   <span>
                     <strong>Design</strong>
-                    <small>Submit Figma or design files</small>
+                    <small>
+                      Submit Figma or design files
+                    </small>
                   </span>
 
                   {bountyType === 'design' && <b>✓</b>}
@@ -173,7 +181,9 @@ function CreateBounty() {
 
                   <span>
                     <strong>Writing</strong>
-                    <small>Submit documents or written work</small>
+                    <small>
+                      Submit documents or written work
+                    </small>
                   </span>
 
                   {bountyType === 'writing' && <b>✓</b>}
@@ -190,7 +200,9 @@ function CreateBounty() {
 
                   <span>
                     <strong>Other</strong>
-                    <small>Submit another type of deliverable</small>
+                    <small>
+                      Submit another type of deliverable
+                    </small>
                   </span>
 
                   {bountyType === 'other' && <b>✓</b>}
@@ -201,15 +213,15 @@ function CreateBounty() {
 
             <div className="form-divider" />
 
-            {/* REWARD */}
-
             <div className="form-section">
               <div className="form-section-title">
                 <span>03</span>
 
                 <div>
                   <h2>Reward</h2>
-                  <p>Set the amount that will be held in escrow.</p>
+                  <p>
+                    Set the amount that will be held in escrow.
+                  </p>
                 </div>
               </div>
 
@@ -243,15 +255,15 @@ function CreateBounty() {
 
             <div className="form-divider" />
 
-            {/* RECIPIENT */}
-
             <div className="form-section">
               <div className="form-section-title">
                 <span>04</span>
 
                 <div>
                   <h2>Recipient</h2>
-                  <p>Choose how the bounty should be assigned.</p>
+                  <p>
+                    Choose how the bounty should be assigned.
+                  </p>
                 </div>
               </div>
 
@@ -268,7 +280,9 @@ function CreateBounty() {
 
                   <span>
                     <strong>Wallet address</strong>
-                    <small>Pay a specific contributor</small>
+                    <small>
+                      Pay a specific contributor
+                    </small>
                   </span>
 
                   {recipientType === 'wallet' && <b>✓</b>}
@@ -285,7 +299,9 @@ function CreateBounty() {
 
                   <span>
                     <strong>Email invitation</strong>
-                    <small>Invite someone to claim the bounty</small>
+                    <small>
+                      Invite someone to claim the bounty
+                    </small>
                   </span>
 
                   {recipientType === 'email' && <b>✓</b>}
@@ -302,7 +318,9 @@ function CreateBounty() {
 
                   <span>
                     <strong>Open to applicants</strong>
-                    <small>Let contributors apply for this bounty</small>
+                    <small>
+                      Let contributors apply for this bounty
+                    </small>
                   </span>
 
                   {recipientType === 'open' && <b>✓</b>}
@@ -359,6 +377,7 @@ function CreateBounty() {
                   </p>
                 </div>
               )}
+
             </div>
 
             <button
