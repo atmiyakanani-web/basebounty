@@ -165,6 +165,11 @@ export function getBounties() {
   This runs in the background from App.jsx.
   LocalStorage is still used as a fast cache so
   the existing pages do not need to become async.
+
+  IMPORTANT:
+  deleted_bounties is used as a permanent record
+  of deleted bounty IDs so another device does not
+  upload the deleted bounty again.
 */
 export async function syncBounties() {
   if (!supabase) {
@@ -176,6 +181,33 @@ export async function syncBounties() {
   }
 
   try {
+    /*
+      First get the shared deleted-bounty list.
+      This must happen before we decide which local
+      bounties should be uploaded again.
+    */
+    const {
+      data: deletedRows,
+      error: deletedError,
+    } = await supabase
+      .from('deleted_bounties')
+      .select('id')
+
+    if (deletedError) {
+      throw deletedError
+    }
+
+    const deletedIds = new Set(
+      Array.isArray(deletedRows)
+        ? deletedRows.map((row) =>
+            String(row.id)
+          )
+        : []
+    )
+
+    /*
+      Get all active/shared bounties.
+    */
     const {
       data,
       error,
@@ -193,65 +225,96 @@ export async function syncBounties() {
     const localBounties =
       readLocalBounties()
 
-    const remoteBounties = Array.isArray(data)
-      ? data
-          .map((row) => {
-            if (
-              row &&
-              row.data &&
-              typeof row.data === 'object'
-            ) {
-              return {
-                ...row.data,
-                id:
-                  row.data.id ||
-                  row.id,
+    const remoteBounties =
+      Array.isArray(data)
+        ? data
+            .map((row) => {
+              if (
+                row &&
+                row.data &&
+                typeof row.data === 'object'
+              ) {
+                return {
+                  ...row.data,
+                  id:
+                    row.data.id ||
+                    row.id,
+                }
               }
-            }
 
-            return null
-          })
-          .filter(Boolean)
-      : []
+              return null
+            })
+            .filter(Boolean)
+        : []
 
     /*
       Keep demo bounties locally.
-      Cloud bounties are shared between all devices.
+
+      Demo bounties are not stored in Supabase.
+      They are always available as sample content.
     */
-    const demos = localBounties.filter(
-      (bounty) =>
-        String(bounty.id).startsWith(
-          'demo-'
-        )
-    )
+    const demos =
+      localBounties.filter(
+        (bounty) => {
+          const bountyId =
+            String(bounty.id)
+
+          return (
+            bountyId.startsWith(
+              'demo-'
+            ) &&
+            !deletedIds.has(
+              bountyId
+            )
+          )
+        }
+      )
 
     /*
       If this device already has locally-created
       bounties from before cloud sync was added,
       upload them once.
+
+      IMPORTANT:
+      A bounty recorded in deleted_bounties is NEVER
+      uploaded again.
     */
     const localUserBounties =
       localBounties.filter(
         (bounty) =>
-          !String(bounty.id).startsWith(
-            'demo-'
-          )
+          !String(
+            bounty.id
+          ).startsWith('demo-')
       )
 
     const remoteIds = new Set(
       remoteBounties.map(
-        (bounty) => String(bounty.id)
+        (bounty) =>
+          String(bounty.id)
       )
     )
 
     const missingRemote =
       localUserBounties.filter(
-        (bounty) =>
-          !remoteIds.has(
+        (bounty) => {
+          const bountyId =
             String(bounty.id)
+
+          return (
+            !remoteIds.has(
+              bountyId
+            ) &&
+            !deletedIds.has(
+              bountyId
+            )
           )
+        }
       )
 
+    /*
+      Upload only bounties that are not marked
+      as deleted.
+    */
     for (const bounty of missingRemote) {
       await uploadBounty(bounty)
     }
@@ -259,42 +322,80 @@ export async function syncBounties() {
     const mergedMap =
       new Map()
 
+    /*
+      Add demo bounties that are not deleted.
+    */
     for (const bounty of demos) {
-      mergedMap.set(
-        String(bounty.id),
-        bounty
-      )
+      const bountyId =
+        String(bounty.id)
+
+      if (
+        !deletedIds.has(
+          bountyId
+        )
+      ) {
+        mergedMap.set(
+          bountyId,
+          bounty
+        )
+      }
     }
 
+    /*
+      Add cloud bounties that are not deleted.
+    */
     for (const bounty of remoteBounties) {
-      mergedMap.set(
-        String(bounty.id),
-        bounty
-      )
+      const bountyId =
+        String(bounty.id)
+
+      if (
+        !deletedIds.has(
+          bountyId
+        )
+      ) {
+        mergedMap.set(
+          bountyId,
+          bounty
+        )
+      }
     }
 
+    /*
+      Add locally-created bounties that were
+      successfully identified as missing remotely.
+    */
     for (const bounty of missingRemote) {
-      mergedMap.set(
-        String(bounty.id),
-        bounty
-      )
+      const bountyId =
+        String(bounty.id)
+
+      if (
+        !deletedIds.has(
+          bountyId
+        )
+      ) {
+        mergedMap.set(
+          bountyId,
+          bounty
+        )
+      }
     }
 
-    const merged = Array.from(
-      mergedMap.values()
-    ).sort((a, b) => {
-      const aDate =
-        new Date(
-          a.createdAt || 0
-        ).getTime()
+    const merged =
+      Array.from(
+        mergedMap.values()
+      ).sort((a, b) => {
+        const aDate =
+          new Date(
+            a.createdAt || 0
+          ).getTime()
 
-      const bDate =
-        new Date(
-          b.createdAt || 0
-        ).getTime()
+        const bDate =
+          new Date(
+            b.createdAt || 0
+          ).getTime()
 
-      return bDate - aDate
-    })
+        return bDate - aDate
+      })
 
     saveLocalBounties(merged)
 
@@ -325,6 +426,39 @@ export async function syncBounties() {
 
 async function uploadBounty(bounty) {
   if (!supabase) {
+    return false
+  }
+
+  /*
+    Safety check:
+    Never upload a bounty that has already been
+    recorded as deleted.
+  */
+  const {
+    data: deletedRows,
+    error: deletedCheckError,
+  } = await supabase
+    .from('deleted_bounties')
+    .select('id')
+    .eq(
+      'id',
+      String(bounty.id)
+    )
+    .limit(1)
+
+  if (deletedCheckError) {
+    console.error(
+      'Could not check deleted bounty:',
+      deletedCheckError
+    )
+
+    return false
+  }
+
+  if (
+    Array.isArray(deletedRows) &&
+    deletedRows.length > 0
+  ) {
     return false
   }
 
@@ -410,7 +544,18 @@ export function createLocalBounty(
   return newBounty
 }
 
-export function deleteBounty(id) {
+/*
+  Deletes a bounty locally AND records its ID in
+  Supabase deleted_bounties.
+
+  The deleted_bounties record is created FIRST.
+  This is important because another device could
+  otherwise upload the bounty again during sync.
+*/
+export async function deleteBounty(id) {
+  const bountyId =
+    String(id)
+
   const bounties =
     readLocalBounties()
 
@@ -418,7 +563,7 @@ export function deleteBounty(id) {
     bounties.find(
       (item) =>
         String(item.id) ===
-        String(id)
+        bountyId
     )
 
   if (!bounty) {
@@ -450,29 +595,89 @@ export function deleteBounty(id) {
     }
   }
 
+  /*
+    Record the deletion in Supabase FIRST.
+
+    Because deleted_bounties.id is the primary key,
+    upsert safely handles the same deletion more
+    than once.
+  */
+  if (supabase) {
+    const {
+      error: deletedError,
+    } = await supabase
+      .from('deleted_bounties')
+      .upsert(
+        {
+          id: bountyId,
+        },
+        {
+          onConflict: 'id',
+        }
+      )
+
+    if (deletedError) {
+      console.error(
+        'Could not record deleted bounty:',
+        deletedError
+      )
+
+      return {
+        success: false,
+        reason:
+          'Could not sync bounty deletion.',
+      }
+    }
+
+    /*
+      Now remove the bounty from the shared
+      bounties table.
+    */
+    const {
+      error: bountyDeleteError,
+    } = await supabase
+      .from('bounties')
+      .delete()
+      .eq(
+        'id',
+        bountyId
+      )
+
+    if (bountyDeleteError) {
+      console.error(
+        'Could not delete cloud bounty:',
+        bountyDeleteError
+      )
+
+      return {
+        success: false,
+        reason:
+          'Could not delete bounty from the server.',
+      }
+    }
+  }
+
+  /*
+    Remove the bounty from this device.
+  */
   const updated =
     bounties.filter(
       (item) =>
         String(item.id) !==
-        String(id)
+        bountyId
     )
 
   saveLocalBounties(updated)
 
-  if (supabase) {
-    supabase
-      .from('bounties')
-      .delete()
-      .eq('id', String(id))
-      .then(({ error }) => {
-        if (error) {
-          console.error(
-            'Could not delete cloud bounty:',
-            error
-          )
-        }
-      })
-  }
+  /*
+    Tell the currently-open UI that the bounty
+    list has changed.
+  */
+  window.dispatchEvent(
+    new CustomEvent(
+      'basebounty:bounties-synced'
+    )
+  )
 
   return {
     success: true,
