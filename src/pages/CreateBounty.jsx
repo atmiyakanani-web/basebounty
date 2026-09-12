@@ -2,7 +2,7 @@ import { useState } from 'react'
 import './CreateBounty.css'
 
 function CreateBounty() {
-  const [recipientType, setRecipientType] = useState('wallet')
+  const [recipientType, setRecipientType] = useState('open')
   const [bountyType, setBountyType] = useState('website')
 
   const [formData, setFormData] = useState({

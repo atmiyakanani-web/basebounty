@@ -74,8 +74,9 @@ function ReviewBounty() {
 
     try {
       const createdBounty = createLocalBounty({
-        ...bounty,
-        bountyType: bounty.bountyType || 'website',
+  ...bounty,
+  recipientType: bounty.recipientType || 'open',
+  bountyType: bounty.bountyType || 'website',
         onchain: false,
         network: 'Base',
         escrow: 'Smart Contract',
