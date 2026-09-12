@@ -5773,3 +5773,381 @@ textarea {
 a {
   overflow-wrap: anywhere;
 }
+/* =========================================================
+   FINAL NAVBAR + MOBILE SIDE MENU
+   ========================================================= */
+
+.navbar {
+  position: relative;
+  z-index: 1000;
+}
+
+/* ---------- DESKTOP NAV ---------- */
+
+.nav-links {
+  display: flex;
+  align-items: center;
+  gap: 28px;
+  min-width: 0;
+}
+
+.nav-links > a,
+.nav-dropdown-trigger {
+  color: inherit;
+  text-decoration: none;
+  font: inherit;
+}
+
+.nav-dropdown-trigger {
+  border: 0;
+  background: transparent;
+  padding: 8px 0;
+  cursor: pointer;
+}
+
+.nav-dropdown {
+  position: relative;
+}
+
+.nav-dropdown-trigger:hover {
+  opacity: 0.7;
+}
+
+/* ---------- DESKTOP DROPDOWN ---------- */
+
+.nav-menu {
+  position: absolute;
+  top: calc(100% + 12px);
+  left: 50%;
+  transform: translateX(-50%) translateY(-6px);
+
+  width: 270px;
+  max-width: calc(100vw - 32px);
+
+  padding: 10px;
+
+  background: #ffffff;
+  border: 1px solid #e7e7e2;
+  border-radius: 16px;
+
+  box-shadow: 0 18px 45px rgba(0, 0, 0, 0.12);
+
+  opacity: 0;
+  visibility: hidden;
+  pointer-events: none;
+
+  transition:
+    opacity 0.18s ease,
+    transform 0.18s ease,
+    visibility 0.18s ease;
+}
+
+.nav-dropdown:hover .nav-menu,
+.nav-dropdown-open .nav-menu {
+  opacity: 1;
+  visibility: visible;
+  pointer-events: auto;
+  transform: translateX(-50%) translateY(0);
+}
+
+.nav-menu-heading {
+  padding: 12px 13px 10px;
+}
+
+.nav-menu-heading span {
+  display: block;
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  opacity: 0.5;
+}
+
+.nav-menu-heading strong {
+  display: block;
+  margin-top: 4px;
+  font-size: 17px;
+}
+
+.nav-menu > a {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+
+  padding: 12px 13px;
+
+  border-radius: 10px;
+
+  color: inherit;
+  text-decoration: none;
+
+  transition: background 0.15s ease;
+}
+
+.nav-menu > a:hover {
+  background: #f4f4f0;
+}
+
+.nav-menu > a span {
+  font-size: 14px;
+  font-weight: 650;
+}
+
+.nav-menu > a small {
+  font-size: 11px;
+  opacity: 0.55;
+}
+
+/* ---------- WALLET ---------- */
+
+.navbar-wallet {
+  flex-shrink: 0;
+}
+
+/* ---------- MOBILE BUTTON ---------- */
+
+.mobile-menu-button {
+  display: none;
+
+  width: 44px;
+  height: 44px;
+
+  flex-shrink: 0;
+
+  border: 1px solid #e2e2dd;
+  border-radius: 12px;
+
+  background: #ffffff;
+
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+  gap: 5px;
+
+  cursor: pointer;
+}
+
+.mobile-menu-button span {
+  display: block;
+  width: 18px;
+  height: 2px;
+  border-radius: 10px;
+  background: #111111;
+}
+
+/* ---------- MOBILE OVERLAY ---------- */
+
+.mobile-menu-overlay {
+  position: fixed;
+  inset: 0;
+
+  background: rgba(0, 0, 0, 0.28);
+
+  opacity: 0;
+  visibility: hidden;
+  pointer-events: none;
+
+  transition:
+    opacity 0.25s ease,
+    visibility 0.25s ease;
+
+  z-index: 1998;
+}
+
+.mobile-menu-overlay-open {
+  opacity: 1;
+  visibility: visible;
+  pointer-events: auto;
+}
+
+/* ---------- MOBILE SIDE PANEL ---------- */
+
+.mobile-menu-panel {
+  position: fixed;
+
+  top: 0;
+  right: 0;
+
+  width: min(360px, 88vw);
+  height: 100dvh;
+
+  background: #ffffff;
+
+  border-left: 1px solid #e7e7e2;
+
+  box-shadow: -20px 0 50px rgba(0, 0, 0, 0.12);
+
+  transform: translateX(105%);
+
+  transition: transform 0.28s ease;
+
+  z-index: 1999;
+
+  display: flex;
+  flex-direction: column;
+
+  overflow-y: auto;
+}
+
+.mobile-menu-panel-open {
+  transform: translateX(0);
+}
+
+/* ---------- MOBILE PANEL HEADER ---------- */
+
+.mobile-menu-header {
+  min-height: 76px;
+
+  padding: 16px 18px;
+
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+
+  border-bottom: 1px solid #eeeeea;
+}
+
+.mobile-menu-header .brand {
+  text-decoration: none;
+  color: inherit;
+}
+
+.mobile-menu-close {
+  width: 42px;
+  height: 42px;
+
+  border: 1px solid #e2e2dd;
+  border-radius: 12px;
+
+  background: #ffffff;
+
+  font-size: 28px;
+  line-height: 1;
+
+  cursor: pointer;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* ---------- MOBILE CONTENT ---------- */
+
+.mobile-menu-content {
+  display: flex;
+  flex-direction: column;
+
+  padding: 18px;
+  gap: 6px;
+}
+
+.mobile-menu-content > a {
+  display: block;
+
+  padding: 14px 15px;
+
+  border-radius: 11px;
+
+  color: inherit;
+  text-decoration: none;
+
+  font-size: 15px;
+  font-weight: 600;
+
+  transition:
+    background 0.15s ease,
+    transform 0.15s ease;
+}
+
+.mobile-menu-content > a:hover {
+  background: #f4f4f0;
+  transform: translateX(3px);
+}
+
+.mobile-wallet {
+  margin-top: 14px;
+  padding-top: 18px;
+
+  border-top: 1px solid #eeeeea;
+}
+
+.mobile-wallet .wallet-button {
+  width: 100%;
+}
+
+/* =========================================================
+   MOBILE BREAKPOINT
+   ========================================================= */
+
+@media (max-width: 700px) {
+
+  .navbar {
+    padding: 14px 18px;
+  }
+
+  .nav-links,
+  .navbar-wallet {
+    display: none !important;
+  }
+
+  .mobile-menu-button {
+    display: flex;
+  }
+
+  .brand {
+    min-width: 0;
+  }
+
+  .brand > span:last-child {
+    white-space: nowrap;
+  }
+}
+
+/* =========================================================
+   VERY SMALL MOBILE
+   ========================================================= */
+
+@media (max-width: 400px) {
+
+  .navbar {
+    padding: 12px 14px;
+  }
+
+  .mobile-menu-panel {
+    width: 92vw;
+  }
+
+  .mobile-menu-content {
+    padding: 14px;
+  }
+}
+
+/* =========================================================
+   DARK MODE
+   ========================================================= */
+
+html[data-theme="dark"] .nav-menu,
+html[data-theme="dark"] .mobile-menu-panel,
+html[data-theme="dark"] .mobile-menu-button,
+html[data-theme="dark"] .mobile-menu-close {
+  background: #111111;
+  border-color: #2d2d2d;
+  color: #ffffff;
+}
+
+html[data-theme="dark"] .nav-menu > a:hover,
+html[data-theme="dark"] .mobile-menu-content > a:hover {
+  background: #202020;
+}
+
+html[data-theme="dark"] .mobile-menu-header,
+html[data-theme="dark"] .mobile-wallet {
+  border-color: #2d2d2d;
+}
+
+html[data-theme="dark"] .mobile-menu-button span {
+  background: #ffffff;
+}
+
+html[data-theme="dark"] .mobile-menu-close {
+  color: #ffffff;
+}
