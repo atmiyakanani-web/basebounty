@@ -5,6 +5,7 @@ import {
   getBounties,
   getCurrentUserId,
   getApplications,
+  updateBounty,
 } from '../lib/bountyStorage'
 
 import './SubmitWork.css'
@@ -27,6 +28,7 @@ function SubmitWork() {
   })
 
   const [error, setError] = useState('')
+  const [submitting, setSubmitting] = useState(false)
 
   if (!bounty) {
     return (
@@ -67,11 +69,11 @@ function SubmitWork() {
       (application) =>
         String(application.bountyId) ===
           String(bounty.id) &&
-        application.applicantId ===
-          currentUserId &&
+        String(application.applicantId) ===
+          String(currentUserId) &&
         application.status === 'Accepted' &&
-        application.id ===
-          bounty.acceptedApplicationId
+        String(application.id) ===
+          String(bounty.acceptedApplicationId)
     )
 
   const isAssignedWorker =
@@ -100,10 +102,12 @@ function SubmitWork() {
     setError('')
   }
 
-  const handleSubmit = (event) => {
+  const handleSubmit = async (event) => {
     event.preventDefault()
 
     setError('')
+
+    if (submitting) return
 
     if (!isAssignedWorker) {
       setError(
@@ -192,38 +196,62 @@ function SubmitWork() {
         `Submission Link: ${formData.submissionUrl.trim()}\n\nDetails: ${formData.notes.trim()}`
     }
 
-    const updatedBounties =
-      getBounties().map(
-        (item) => {
-          if (
-            String(item.id) !==
-            String(bounty.id)
-          ) {
-            return item
-          }
+    setSubmitting(true)
 
-          return {
-            ...item,
+    try {
+      const result =
+        await updateBounty(
+          bounty.id,
+          {
             status: 'Submitted',
+
             submission,
+
             submittedBy:
               currentUserId,
+
             submittedAt:
               new Date().toISOString(),
+
+            contributor:
+              bounty.contributor,
+
+            contributorId:
+              bounty.contributorId,
+
+            workerId:
+              bounty.workerId,
+
+            acceptedApplicationId:
+              bounty.acceptedApplicationId,
           }
-        }
+        )
+
+      if (!result.success) {
+        setError(
+          result.reason ||
+          'Could not submit your work.'
+        )
+
+        setSubmitting(false)
+        return
+      }
+
+      navigate(
+        `/bounty/${bounty.id}`
+      )
+    } catch (submitError) {
+      console.error(
+        'Work submission failed:',
+        submitError
       )
 
-    localStorage.setItem(
-      'basebounty_bounties',
-      JSON.stringify(
-        updatedBounties
+      setError(
+        'Could not sync your submission. Please try again.'
       )
-    )
 
-    navigate(
-      `/bounty/${bounty.id}`
-    )
+      setSubmitting(false)
+    }
   }
 
   if (
@@ -233,6 +261,7 @@ function SubmitWork() {
     return (
       <main className="submit-page">
         <section className="submit-header">
+
           <Link
             to={`/bounty/${bounty.id}`}
             className="details-back"
@@ -264,6 +293,7 @@ function SubmitWork() {
           >
             View Bounty →
           </Link>
+
         </section>
       </main>
     )
@@ -273,6 +303,7 @@ function SubmitWork() {
     return (
       <main className="submit-page">
         <section className="submit-header">
+
           <Link
             to={`/bounty/${bounty.id}`}
             className="details-back"
@@ -299,6 +330,7 @@ function SubmitWork() {
           >
             View Bounty →
           </Link>
+
         </section>
       </main>
     )
@@ -308,6 +340,7 @@ function SubmitWork() {
     <main className="submit-page">
 
       <section className="submit-header">
+
         <Link
           to={`/bounty/${bounty.id}`}
           className="details-back"
@@ -328,6 +361,7 @@ function SubmitWork() {
           and give the client everything needed to
           review your work.
         </p>
+
       </section>
 
       <section className="submit-layout">
@@ -500,8 +534,11 @@ function SubmitWork() {
             <button
               type="submit"
               className="button button-dark"
+              disabled={submitting}
             >
-              Submit Work →
+              {submitting
+                ? 'Submitting...'
+                : 'Submit Work →'}
             </button>
 
           </form>
