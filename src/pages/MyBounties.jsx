@@ -31,7 +31,7 @@ function MyBounties() {
     ).length
   }
 
-  const handleDelete = (id) => {
+  const handleDelete = async (id) => {
     const bounty = bounties.find(
       (item) =>
         String(item.id) === String(id)
@@ -52,7 +52,7 @@ function MyBounties() {
 
     if (!confirmed) return
 
-    const result = deleteBounty(id)
+    const result = await deleteBounty(id)
 
     if (!result.success) {
       alert(result.reason)

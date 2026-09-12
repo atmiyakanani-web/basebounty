@@ -18,13 +18,77 @@ import HireSomeone from './pages/HireSomeone.jsx'
 import NotFound from './pages/NotFound.jsx'
 import Settings from './pages/Settings.jsx'
 
-import { syncBounties } from './lib/bountyStorage'
+import {
+  syncBounties,
+} from './lib/bountyStorage'
 
 import './App.css'
 
 function App() {
   useEffect(() => {
+    /*
+      Initial sync when the app opens.
+    */
     syncBounties()
+
+    /*
+      Keep the marketplace synced across devices.
+      Every 5 seconds the app checks Supabase for
+      new/deleted bounties.
+    */
+    const syncInterval =
+      setInterval(() => {
+        syncBounties()
+      }, 5000)
+
+    /*
+      Sync immediately when the browser tab
+      becomes active again.
+    */
+    const handleVisibilityChange =
+      () => {
+        if (
+          document.visibilityState ===
+          'visible'
+        ) {
+          syncBounties()
+        }
+      }
+
+    document.addEventListener(
+      'visibilitychange',
+      handleVisibilityChange
+    )
+
+    /*
+      Sync immediately when the window
+      receives focus.
+    */
+    const handleFocus = () => {
+      syncBounties()
+    }
+
+    window.addEventListener(
+      'focus',
+      handleFocus
+    )
+
+    /*
+      Clean everything when App unmounts.
+    */
+    return () => {
+      clearInterval(syncInterval)
+
+      document.removeEventListener(
+        'visibilitychange',
+        handleVisibilityChange
+      )
+
+      window.removeEventListener(
+        'focus',
+        handleFocus
+      )
+    }
   }, [])
 
   return (
@@ -34,7 +98,10 @@ function App() {
         <Sidebar />
 
         <Routes>
-          <Route path="/" element={<Home />} />
+          <Route
+            path="/"
+            element={<Home />}
+          />
 
           <Route
             path="/bounty/:id/submit"
