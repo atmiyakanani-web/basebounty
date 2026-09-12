@@ -1,58 +1,80 @@
 import { Link } from 'react-router-dom'
-import './FindWork.css'
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
+
 import {
   getBounties,
-  getApplications,
   getCurrentUserId,
-  deleteBounty,
+  syncBounties,
 } from '../lib/bountyStorage'
 
-function MyBounties() {
-  const currentUserId = getCurrentUserId()
+import './FindWork.css'
 
-  const getMyBounties = () =>
+function FindWork() {
+  const currentUserId =
+    getCurrentUserId()
+
+  const getWorkerBounties = () =>
     getBounties().filter(
       (bounty) =>
-        !String(bounty.id).startsWith('demo-') &&
-        bounty.ownerId === currentUserId
+        !String(
+          bounty.id
+        ).startsWith('demo-') &&
+        String(
+          bounty.workerId ||
+          bounty.contributorId
+        ) ===
+          String(currentUserId) &&
+        (
+          bounty.status ===
+            'Accepted' ||
+          bounty.status ===
+            'Submitted' ||
+          bounty.status ===
+            'Completed'
+        )
     )
 
-  const [bounties, setBounties] =
-    useState(getMyBounties)
+  const [
+    bounties,
+    setBounties,
+  ] = useState(
+    getWorkerBounties
+  )
 
-  const handleDelete = (id) => {
-    const bounty = bounties.find(
-      (item) =>
-        String(item.id) === String(id)
+  useEffect(() => {
+    const refresh = () => {
+      setBounties(
+        getWorkerBounties()
+      )
+    }
+
+    syncBounties().then(refresh)
+
+    const handleSync = () => {
+      refresh()
+    }
+
+    window.addEventListener(
+      'basebounty:bounties-synced',
+      handleSync
     )
 
-    if (!bounty) return
+    const interval =
+      setInterval(() => {
+        syncBounties().then(
+          refresh
+        )
+      }, 5000)
 
-    if (bounty.status !== 'Open') {
-      alert(
-        'This bounty cannot be deleted because work has already started.'
+    return () => {
+      clearInterval(interval)
+
+      window.removeEventListener(
+        'basebounty:bounties-synced',
+        handleSync
       )
-      return
     }
-
-    const confirmed =
-      window.confirm(
-        `Delete "${bounty.title}"?\n\nThis action cannot be undone.`
-      )
-
-    if (!confirmed) return
-
-    const result =
-      deleteBounty(id)
-
-    if (!result.success) {
-      alert(result.reason)
-      return
-    }
-
-    setBounties(getMyBounties())
-  }
+  }, [])
 
   return (
     <main className="role-page">
@@ -61,25 +83,24 @@ function MyBounties() {
 
         <div>
           <p className="eyebrow">
-            CLIENT DASHBOARD
+            WORKER BOARD
           </p>
 
           <h1>
-            My Bounties.
+            Your Work.
           </h1>
 
           <p>
-            Manage the work you have posted,
-            review applications, select workers,
-            and approve completed work.
+            View the bounties you have been
+            selected for and continue your work.
           </p>
         </div>
 
         <Link
-          to="/create"
+          to="/explore"
           className="button button-dark"
         >
-          Create a Bounty →
+          Find More Bounties →
         </Link>
 
       </section>
@@ -90,11 +111,11 @@ function MyBounties() {
 
           <div>
             <p className="eyebrow">
-              YOUR WORK
+              ASSIGNED WORK
             </p>
 
             <h2>
-              Bounties you created
+              Bounties assigned to you
             </h2>
           </div>
 
@@ -112,22 +133,23 @@ function MyBounties() {
           <div className="empty-state-card">
 
             <h2>
-              No bounties yet
+              No assigned work yet
             </h2>
 
             <p>
-              Create your first bounty and
-              start hiring contributors.
+              When a client accepts your
+              application, the bounty will
+              appear here automatically.
             </p>
 
             <Link
-              to="/create"
+              to="/explore"
               className="button button-dark"
               style={{
                 marginTop: '22px',
               }}
             >
-              Create a Bounty →
+              Explore Bounties →
             </Link>
 
           </div>
@@ -136,18 +158,8 @@ function MyBounties() {
 
           <div className="my-bounty-list">
 
-            {bounties.map((bounty) => {
-
-              const applications =
-                getApplications().filter(
-                  (application) =>
-                    String(
-                      application.bountyId
-                    ) ===
-                    String(bounty.id)
-                )
-
-              return (
+            {bounties.map(
+              (bounty) => (
                 <article
                   className="my-bounty-card"
                   key={bounty.id}
@@ -163,8 +175,7 @@ function MyBounties() {
                       </span>
 
                       <strong>
-                        ● {bounty.status ||
-                          'Open'}
+                        ● {bounty.status}
                       </strong>
 
                     </div>
@@ -193,22 +204,22 @@ function MyBounties() {
 
                     <div>
                       <span>
-                        APPLICATIONS
+                        CLIENT
                       </span>
 
                       <strong>
-                        {applications.length}
+                        {bounty.client ||
+                          'Connected wallet'}
                       </strong>
                     </div>
 
                     <div>
                       <span>
-                        WORKER
+                        STATUS
                       </span>
 
                       <strong>
-                        {bounty.contributor ||
-                          'Not selected'}
+                        {bounty.status}
                       </strong>
                     </div>
 
@@ -222,32 +233,41 @@ function MyBounties() {
                       View Bounty
                     </Link>
 
-                    <Link
-                      to={`/bounty/${bounty.id}/manage`}
-                      className="button button-dark"
-                    >
-                      Manage Bounty →
-                    </Link>
-
-                    {bounty.status === 'Open' && (
-                      <button
-                        type="button"
-                        className="delete-bounty-button"
-                        onClick={() =>
-                          handleDelete(
-                            bounty.id
-                          )
-                        }
+                    {bounty.status ===
+                      'Accepted' && (
+                      <Link
+                        to={`/bounty/${bounty.id}/submit`}
+                        className="button button-dark"
                       >
-                        Delete
-                      </button>
+                        Submit Work →
+                      </Link>
+                    )}
+
+                    {bounty.status ===
+                      'Submitted' && (
+                      <Link
+                        to={`/bounty/${bounty.id}`}
+                        className="button button-dark"
+                      >
+                        View Submission →
+                      </Link>
+                    )}
+
+                    {bounty.status ===
+                      'Completed' && (
+                      <Link
+                        to={`/bounty/${bounty.id}`}
+                        className="button button-light"
+                      >
+                        Completed ✓
+                      </Link>
                     )}
 
                   </div>
 
                 </article>
               )
-            })}
+            )}
 
           </div>
 
@@ -259,4 +279,4 @@ function MyBounties() {
   )
 }
 
-export default MyBounties
+export default FindWork

@@ -5,6 +5,7 @@ import {
   getBounties,
   getApplications,
   getCurrentUserId,
+  updateBounty,
 } from '../lib/bountyStorage'
 
 import './ManageBounty.css'
@@ -22,7 +23,9 @@ function ManageBounty() {
       <main className="manage-page">
         <section className="manage-empty">
           <p className="eyebrow">BOUNTY NOT FOUND</p>
+
           <h1>This bounty does not exist.</h1>
+
           <p>
             The bounty you are looking for could not be
             found or may have been removed.
@@ -85,44 +88,22 @@ function ManageBounty() {
     )
   }
 
-  const handleAcceptWorker = (application) => {
+  const handleAcceptWorker = async (application) => {
     const confirmed = window.confirm(
       `Accept ${application.applicantWallet} for "${bounty.title}"?`
     )
 
     if (!confirmed) return
 
-    const updatedBounties = getBounties().map(
-      (item) => {
-        if (
-          String(item.id) !==
-          String(bounty.id)
-        ) {
-          return item
-        }
+    try {
+      const allApplications =
+        getApplications()
 
-        return {
-          ...item,
-          status: 'Accepted',
-          contributor:
-            application.applicantWallet,
-          acceptedApplicationId:
-            application.id,
-        }
-      }
-    )
-
-    localStorage.setItem(
-      'basebounty_bounties',
-      JSON.stringify(updatedBounties)
-    )
-
-    const updatedApplications =
-      getApplications().map(
-        (item) => {
+      const updatedApplications =
+        allApplications.map((item) => {
           if (
-            item.id ===
-            application.id
+            String(item.id) ===
+            String(application.id)
           ) {
             return {
               ...item,
@@ -142,22 +123,70 @@ function ManageBounty() {
           }
 
           return item
-        }
+        })
+
+      localStorage.setItem(
+        'basebounty_applications',
+        JSON.stringify(updatedApplications)
       )
 
-    localStorage.setItem(
-      'basebounty_applications',
-      JSON.stringify(updatedApplications)
-    )
+      const result =
+        await updateBounty(
+          bounty.id,
+          {
+            status: 'Accepted',
 
-    setRefresh((value) => value + 1)
+            contributor:
+              application.applicantWallet ||
+              'Selected worker',
 
-    alert(
-      'Worker accepted successfully.'
-    )
+            contributorId:
+              application.applicantId,
+
+            workerId:
+              application.applicantId,
+
+            acceptedApplicationId:
+              application.id,
+
+            acceptedAt:
+              new Date().toISOString(),
+
+            applications:
+              updatedApplications.filter(
+                (item) =>
+                  String(item.bountyId) ===
+                  String(bounty.id)
+              ),
+          }
+        )
+
+      if (!result.success) {
+        alert(
+          result.reason ||
+          'Could not accept worker.'
+        )
+        return
+      }
+
+      setRefresh((value) => value + 1)
+
+      alert(
+        'Worker accepted successfully.'
+      )
+    } catch (error) {
+      console.error(
+        'Could not accept worker:',
+        error
+      )
+
+      alert(
+        'Could not sync worker acceptance. Please try again.'
+      )
+    }
   }
 
-  const handleCompleteBounty = () => {
+  const handleCompleteBounty = async () => {
     if (
       bounty.status !==
       'Submitted'
@@ -171,35 +200,40 @@ function ManageBounty() {
 
     if (!confirmed) return
 
-    const updatedBounties =
-      getBounties().map(
-        (item) => {
-          if (
-            String(item.id) !==
-            String(bounty.id)
-          ) {
-            return item
-          }
-
-          return {
-            ...item,
+    try {
+      const result =
+        await updateBounty(
+          bounty.id,
+          {
             status: 'Completed',
             completedAt:
               new Date().toISOString(),
           }
-        }
+        )
+
+      if (!result.success) {
+        alert(
+          result.reason ||
+          'Could not complete bounty.'
+        )
+        return
+      }
+
+      setRefresh((value) => value + 1)
+
+      alert(
+        'Bounty completed successfully.'
+      )
+    } catch (error) {
+      console.error(
+        'Could not complete bounty:',
+        error
       )
 
-    localStorage.setItem(
-      'basebounty_bounties',
-      JSON.stringify(updatedBounties)
-    )
-
-    setRefresh((value) => value + 1)
-
-    alert(
-      'Bounty completed successfully.'
-    )
+      alert(
+        'Could not sync bounty completion. Please try again.'
+      )
+    }
   }
 
   const pendingApplications =
@@ -249,6 +283,7 @@ function ManageBounty() {
 
             <div>
               <span>STATUS</span>
+
               <strong>
                 {bounty.status || 'Open'}
               </strong>
@@ -256,6 +291,7 @@ function ManageBounty() {
 
             <div>
               <span>REWARD</span>
+
               <strong>
                 {bounty.reward} USDC
               </strong>
@@ -263,6 +299,7 @@ function ManageBounty() {
 
             <div>
               <span>APPLICATIONS</span>
+
               <strong>
                 {applications.length}
               </strong>
@@ -318,6 +355,7 @@ function ManageBounty() {
                       >
 
                         <div className="application-card-top">
+
                           <span
                             className={
                               application.status ===
@@ -339,9 +377,11 @@ function ManageBounty() {
                                 ).toLocaleDateString()
                               : 'Recent'}
                           </small>
+
                         </div>
 
                         <div className="application-wallet">
+
                           <span>
                             APPLICANT WALLET
                           </span>
@@ -350,9 +390,11 @@ function ManageBounty() {
                             {application.applicantWallet ||
                               'Wallet not provided'}
                           </strong>
+
                         </div>
 
                         <div className="application-message">
+
                           <span>
                             APPLICATION MESSAGE
                           </span>
@@ -361,6 +403,7 @@ function ManageBounty() {
                             {application.message ||
                               'No message provided.'}
                           </p>
+
                         </div>
 
                         {application.status ===
@@ -412,6 +455,7 @@ function ManageBounty() {
               </div>
 
               <div className="accepted-worker">
+
                 <span>
                   CONTRIBUTOR
                 </span>
@@ -420,6 +464,7 @@ function ManageBounty() {
                   {bounty.contributor ||
                     'Selected worker'}
                 </strong>
+
               </div>
 
             </section>
@@ -429,6 +474,7 @@ function ManageBounty() {
             <section className="submission-review-card">
 
               <div className="submission-review-header">
+
                 <div>
                   <p className="eyebrow">
                     WORK SUBMITTED
@@ -442,9 +488,11 @@ function ManageBounty() {
                 <span>
                   READY FOR REVIEW
                 </span>
+
               </div>
 
               <div className="accepted-worker">
+
                 <span>
                   WORKER
                 </span>
@@ -453,9 +501,11 @@ function ManageBounty() {
                   {bounty.contributor ||
                     'Selected worker'}
                 </strong>
+
               </div>
 
               <div className="application-message submission-box">
+
                 <span>
                   SUBMISSION
                 </span>
@@ -464,6 +514,7 @@ function ManageBounty() {
                   {bounty.submission ||
                     'No submission details provided.'}
                 </p>
+
               </div>
 
               <button
@@ -502,6 +553,7 @@ function ManageBounty() {
               </div>
 
               <div className="accepted-worker">
+
                 <span>
                   CONTRIBUTOR
                 </span>
@@ -510,6 +562,7 @@ function ManageBounty() {
                   {bounty.contributor ||
                     'Selected worker'}
                 </strong>
+
               </div>
 
             </section>
@@ -520,6 +573,7 @@ function ManageBounty() {
         <aside className="manage-sidebar">
 
           <div className="manage-reward-box">
+
             <span>
               BOUNTY REWARD
             </span>
@@ -531,6 +585,7 @@ function ManageBounty() {
             <small>
               {bounty.network || 'Base'} network
             </small>
+
           </div>
 
           <div className="manage-info-card">

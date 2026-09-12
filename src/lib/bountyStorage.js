@@ -151,11 +151,6 @@ export function getBounties() {
   return readLocalBounties()
 }
 
-/*
-  Return all applications from local
-  storage + applications stored inside
-  synced bounty data.
-*/
 export function getApplications() {
   try {
     const saved =
@@ -214,9 +209,6 @@ export function getApplications() {
   }
 }
 
-/*
-  Download shared bounties from Supabase.
-*/
 export async function syncBounties() {
   if (!supabase) {
     return {
@@ -347,14 +339,10 @@ export async function syncBounties() {
       const bountyId =
         String(bounty.id)
 
-      if (
-        !deletedIds.has(bountyId)
-      ) {
-        mergedMap.set(
-          bountyId,
-          bounty
-        )
-      }
+      mergedMap.set(
+        bountyId,
+        bounty
+      )
     }
 
     for (
@@ -493,6 +481,139 @@ async function uploadBounty(bounty) {
   return true
 }
 
+export async function updateBounty(
+  bountyId,
+  updates
+) {
+  const id = String(bountyId)
+
+  const localBounties =
+    readLocalBounties()
+
+  const existing =
+    localBounties.find(
+      (item) =>
+        String(item.id) === id
+    )
+
+  if (!existing) {
+    return {
+      success: false,
+      reason:
+        'Bounty not found.',
+    }
+  }
+
+  const updatedBounty = {
+    ...existing,
+    ...updates,
+  }
+
+  const updatedLocal =
+    localBounties.map(
+      (item) =>
+        String(item.id) === id
+          ? updatedBounty
+          : item
+    )
+
+  saveLocalBounties(
+    updatedLocal
+  )
+
+  if (supabase) {
+    const {
+      data: remoteRow,
+      error: fetchError,
+    } = await supabase
+      .from('bounties')
+      .select('id, data')
+      .eq('id', id)
+      .maybeSingle()
+
+    if (fetchError) {
+      console.error(
+        'Could not fetch bounty:',
+        fetchError
+      )
+
+      return {
+        success: false,
+        reason:
+          fetchError.message,
+      }
+    }
+
+    const remoteBounty =
+      remoteRow?.data &&
+      typeof remoteRow.data ===
+        'object'
+        ? remoteRow.data
+        : existing
+
+    const finalBounty = {
+      ...remoteBounty,
+      ...updates,
+      id:
+        remoteBounty.id || id,
+    }
+
+    const {
+      error: updateError,
+    } = await supabase
+      .from('bounties')
+      .upsert(
+        {
+          id,
+          data: finalBounty,
+        },
+        {
+          onConflict: 'id',
+        }
+      )
+
+    if (updateError) {
+      console.error(
+        'Could not update bounty:',
+        updateError
+      )
+
+      return {
+        success: false,
+        reason:
+          updateError.message,
+      }
+    }
+
+    const refreshed =
+      readLocalBounties().map(
+        (item) =>
+          String(item.id) === id
+            ? finalBounty
+            : item
+      )
+
+    saveLocalBounties(
+      refreshed
+    )
+  }
+
+  window.dispatchEvent(
+    new CustomEvent(
+      'basebounty:bounties-synced'
+    )
+  )
+
+  return {
+    success: true,
+    bounty:
+      getBounties().find(
+        (item) =>
+          String(item.id) === id
+      ),
+  }
+}
+
 export function createLocalBounty(draft) {
   const existing =
     readLocalBounties()
@@ -530,18 +651,16 @@ export function createLocalBounty(draft) {
     applications: [],
   }
 
-  const updated = [
+  saveLocalBounties([
     newBounty,
     ...existing,
-  ]
-
-  saveLocalBounties(updated)
+  ])
 
   uploadBounty(newBounty)
     .then((uploaded) => {
       if (!uploaded) {
         console.error(
-          'Bounty was saved locally but could not be uploaded to Supabase.'
+          'Bounty was saved locally but could not be uploaded.'
         )
 
         return
@@ -624,11 +743,6 @@ export async function deleteBounty(id) {
       )
 
     if (deletedError) {
-      console.error(
-        'Could not record deleted bounty:',
-        deletedError
-      )
-
       return {
         success: false,
         reason:
@@ -648,27 +762,21 @@ export async function deleteBounty(id) {
       )
 
     if (bountyDeleteError) {
-      console.error(
-        'Could not delete cloud bounty:',
-        bountyDeleteError
-      )
-
       return {
         success: false,
         reason:
-          'Could not delete bounty from the server.',
+          'Could not delete bounty from server.',
       }
     }
   }
 
-  const updated =
+  saveLocalBounties(
     bounties.filter(
       (item) =>
         String(item.id) !==
         bountyId
     )
-
-  saveLocalBounties(updated)
+  )
 
   window.dispatchEvent(
     new CustomEvent(
@@ -695,7 +803,7 @@ export function getDraft() {
     return JSON.parse(saved)
   } catch (error) {
     console.error(
-      'Could not load bounty draft:',
+      'Could not load draft:',
       error
     )
 
@@ -709,10 +817,6 @@ export function clearDraft() {
   )
 }
 
-/*
-  Create application and sync it
-  inside the shared bounty record.
-*/
 export async function createApplication(
   application
 ) {
@@ -736,9 +840,6 @@ export async function createApplication(
       new Date().toISOString(),
   }
 
-  /*
-    Save locally immediately.
-  */
   localStorage.setItem(
     APPLICATIONS_KEY,
     JSON.stringify([
@@ -747,15 +848,10 @@ export async function createApplication(
     ])
   )
 
-  /*
-    Find the bounty locally.
-  */
   const localBounty =
     readLocalBounties().find(
       (bounty) =>
-        String(
-          bounty.id
-        ) ===
+        String(bounty.id) ===
         String(
           application.bountyId
         )
@@ -772,21 +868,15 @@ export async function createApplication(
       ? localBounty.applications
       : []
 
-  const updatedApplications = [
-    ...currentApplications,
-    newApplication,
-  ]
-
   const updatedBounty = {
     ...localBounty,
-    applications:
-      updatedApplications,
+    applications: [
+      ...currentApplications,
+      newApplication,
+    ],
   }
 
-  /*
-    Update local bounty.
-  */
-  const updatedBounties =
+  saveLocalBounties(
     readLocalBounties().map(
       (bounty) =>
         String(bounty.id) ===
@@ -796,14 +886,8 @@ export async function createApplication(
           ? updatedBounty
           : bounty
     )
-
-  saveLocalBounties(
-    updatedBounties
   )
 
-  /*
-    Sync application to Supabase.
-  */
   if (supabase) {
     const {
       data: remoteRow,
@@ -820,11 +904,6 @@ export async function createApplication(
       .maybeSingle()
 
     if (fetchError) {
-      console.error(
-        'Could not fetch bounty for application sync:',
-        fetchError
-      )
-
       throw fetchError
     }
 
@@ -843,17 +922,12 @@ export async function createApplication(
           ? remoteBounty.applications
           : []
 
-      const alreadyExists =
+      const finalApplications =
         remoteApplications.some(
           (item) =>
             String(item.id) ===
-            String(
-              newApplication.id
-            )
+            String(newApplication.id)
         )
-
-      const finalApplications =
-        alreadyExists
           ? remoteApplications
           : [
               ...remoteApplications,
@@ -876,9 +950,7 @@ export async function createApplication(
         .upsert(
           {
             id:
-              String(
-                remoteRow.id
-              ),
+              String(remoteRow.id),
             data:
               updatedRemoteBounty,
           },
@@ -889,18 +961,9 @@ export async function createApplication(
         )
 
       if (updateError) {
-        console.error(
-          'Could not sync application to Supabase:',
-          updateError
-        )
-
         throw updateError
       }
 
-      /*
-        Refresh local data from the
-        shared Supabase record.
-      */
       saveLocalBounties(
         readLocalBounties().map(
           (bounty) =>
