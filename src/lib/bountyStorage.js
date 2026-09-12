@@ -5,12 +5,6 @@ const DRAFT_KEY = 'basebounty_draft'
 const APPLICATIONS_KEY = 'basebounty_applications'
 const USER_KEY = 'basebounty_user_id'
 
-/*
-  IMPORTANT:
-  These are frontend/public Supabase values.
-  NEVER put a Supabase service_role/private key here.
-*/
-
 const SUPABASE_URL =
   'https://wdplylhtiwjrjfabqlme.supabase.co'
 
@@ -79,8 +73,7 @@ function createUserId() {
 }
 
 export function getCurrentUserId() {
-  let userId =
-    localStorage.getItem(USER_KEY)
+  let userId = localStorage.getItem(USER_KEY)
 
   if (!userId) {
     userId = createUserId()
@@ -94,9 +87,7 @@ export function getCurrentUserId() {
   return userId
 }
 
-function saveLocalBounties(
-  bounties
-) {
+function saveLocalBounties(bounties) {
   localStorage.setItem(
     BOUNTIES_KEY,
     JSON.stringify(bounties)
@@ -106,26 +97,17 @@ function saveLocalBounties(
 function readLocalBounties() {
   try {
     const saved =
-      localStorage.getItem(
-        BOUNTIES_KEY
-      )
+      localStorage.getItem(BOUNTIES_KEY)
 
     if (!saved) {
-      saveLocalBounties(
-        demoBounties
-      )
-
+      saveLocalBounties(demoBounties)
       return demoBounties
     }
 
-    const parsed =
-      JSON.parse(saved)
+    const parsed = JSON.parse(saved)
 
     if (!Array.isArray(parsed)) {
-      saveLocalBounties(
-        demoBounties
-      )
-
+      saveLocalBounties(demoBounties)
       return demoBounties
     }
 
@@ -134,33 +116,24 @@ function readLocalBounties() {
 
     let changed = false
 
-    const migrated =
-      parsed.map((bounty) => {
-        const isDemo =
-          String(
-            bounty.id
-          ).startsWith('demo-')
+    const migrated = parsed.map((bounty) => {
+      const isDemo =
+        String(bounty.id).startsWith('demo-')
 
-        if (
-          !isDemo &&
-          !bounty.ownerId
-        ) {
-          changed = true
+      if (!isDemo && !bounty.ownerId) {
+        changed = true
 
-          return {
-            ...bounty,
-            ownerId:
-              currentUserId,
-          }
+        return {
+          ...bounty,
+          ownerId: currentUserId,
         }
+      }
 
-        return bounty
-      })
+      return bounty
+    })
 
     if (changed) {
-      saveLocalBounties(
-        migrated
-      )
+      saveLocalBounties(migrated)
     }
 
     return migrated
@@ -179,10 +152,70 @@ export function getBounties() {
 }
 
 /*
-  Download shared bounties from Supabase.
+  Return all applications from local
+  storage + applications stored inside
+  synced bounty data.
+*/
+export function getApplications() {
+  try {
+    const saved =
+      localStorage.getItem(
+        APPLICATIONS_KEY
+      )
 
-  deleted_bounties is checked first so a bounty
-  deleted on another device cannot be uploaded again.
+    let localApplications = []
+
+    if (saved) {
+      const parsed = JSON.parse(saved)
+
+      if (Array.isArray(parsed)) {
+        localApplications = parsed
+      }
+    }
+
+    const bountyApplications =
+      readLocalBounties().flatMap(
+        (bounty) =>
+          Array.isArray(
+            bounty.applications
+          )
+            ? bounty.applications
+            : []
+      )
+
+    const map = new Map()
+
+    for (const application of localApplications) {
+      if (application?.id) {
+        map.set(
+          String(application.id),
+          application
+        )
+      }
+    }
+
+    for (const application of bountyApplications) {
+      if (application?.id) {
+        map.set(
+          String(application.id),
+          application
+        )
+      }
+    }
+
+    return Array.from(map.values())
+  } catch (error) {
+    console.error(
+      'Could not load applications:',
+      error
+    )
+
+    return []
+  }
+}
+
+/*
+  Download shared bounties from Supabase.
 */
 export async function syncBounties() {
   if (!supabase) {
@@ -194,9 +227,6 @@ export async function syncBounties() {
   }
 
   try {
-    /*
-      Get deleted bounty IDs first.
-    */
     const {
       data: deletedRows,
       error: deletedError,
@@ -210,21 +240,14 @@ export async function syncBounties() {
 
     const deletedIds =
       new Set(
-        Array.isArray(
-          deletedRows
-        )
+        Array.isArray(deletedRows)
           ? deletedRows.map(
               (row) =>
-                String(
-                  row.id
-                )
+                String(row.id)
             )
           : []
       )
 
-    /*
-      Get active bounties from Supabase.
-    */
     const {
       data,
       error,
@@ -247,10 +270,6 @@ export async function syncBounties() {
     const localBounties =
       readLocalBounties()
 
-    /*
-      Convert Supabase rows into
-      normal bounty objects.
-    */
     const remoteBounties =
       Array.isArray(data)
         ? data
@@ -274,32 +293,19 @@ export async function syncBounties() {
             .filter(Boolean)
         : []
 
-    /*
-      Keep demo bounties locally.
-    */
     const demos =
       localBounties.filter(
         (bounty) => {
           const bountyId =
-            String(
-              bounty.id
-            )
+            String(bounty.id)
 
           return (
-            bountyId.startsWith(
-              'demo-'
-            ) &&
-            !deletedIds.has(
-              bountyId
-            )
+            bountyId.startsWith('demo-') &&
+            !deletedIds.has(bountyId)
           )
         }
       )
 
-    /*
-      Find locally-created bounties
-      which are not yet in Supabase.
-    */
     const localUserBounties =
       localBounties.filter(
         (bounty) =>
@@ -312,9 +318,7 @@ export async function syncBounties() {
       new Set(
         remoteBounties.map(
           (bounty) =>
-            String(
-              bounty.id
-            )
+            String(bounty.id)
         )
       )
 
@@ -322,53 +326,29 @@ export async function syncBounties() {
       localUserBounties.filter(
         (bounty) => {
           const bountyId =
-            String(
-              bounty.id
-            )
+            String(bounty.id)
 
           return (
-            !remoteIds.has(
-              bountyId
-            ) &&
-            !deletedIds.has(
-              bountyId
-            )
+            !remoteIds.has(bountyId) &&
+            !deletedIds.has(bountyId)
           )
         }
       )
 
-    /*
-      Upload missing local bounties.
-    */
     for (
       const bounty of missingRemote
     ) {
-      await uploadBounty(
-        bounty
-      )
+      await uploadBounty(bounty)
     }
 
-    /*
-      Build final marketplace list.
-    */
-    const mergedMap =
-      new Map()
+    const mergedMap = new Map()
 
-    /*
-      Add demos.
-    */
-    for (
-      const bounty of demos
-    ) {
+    for (const bounty of demos) {
       const bountyId =
-        String(
-          bounty.id
-        )
+        String(bounty.id)
 
       if (
-        !deletedIds.has(
-          bountyId
-        )
+        !deletedIds.has(bountyId)
       ) {
         mergedMap.set(
           bountyId,
@@ -377,21 +357,14 @@ export async function syncBounties() {
       }
     }
 
-    /*
-      Add Supabase bounties.
-    */
     for (
       const bounty of remoteBounties
     ) {
       const bountyId =
-        String(
-          bounty.id
-        )
+        String(bounty.id)
 
       if (
-        !deletedIds.has(
-          bountyId
-        )
+        !deletedIds.has(bountyId)
       ) {
         mergedMap.set(
           bountyId,
@@ -400,22 +373,14 @@ export async function syncBounties() {
       }
     }
 
-    /*
-      Add locally-created bounties
-      which were uploaded during sync.
-    */
     for (
       const bounty of missingRemote
     ) {
       const bountyId =
-        String(
-          bounty.id
-        )
+        String(bounty.id)
 
       if (
-        !deletedIds.has(
-          bountyId
-        )
+        !deletedIds.has(bountyId)
       ) {
         mergedMap.set(
           bountyId,
@@ -424,9 +389,6 @@ export async function syncBounties() {
       }
     }
 
-    /*
-      Sort newest first.
-    */
     const merged =
       Array.from(
         mergedMap.values()
@@ -444,14 +406,8 @@ export async function syncBounties() {
         return bDate - aDate
       })
 
-    saveLocalBounties(
-      merged
-    )
+    saveLocalBounties(merged)
 
-    /*
-      Tell all currently-open pages
-      that bounty data changed.
-    */
     window.dispatchEvent(
       new CustomEvent(
         'basebounty:bounties-synced'
@@ -477,20 +433,11 @@ export async function syncBounties() {
   }
 }
 
-/*
-  Upload one bounty to Supabase.
-*/
-async function uploadBounty(
-  bounty
-) {
+async function uploadBounty(bounty) {
   if (!supabase) {
     return false
   }
 
-  /*
-    Make sure this bounty was not
-    deleted on another device.
-  */
   const {
     data: deletedRows,
     error:
@@ -500,9 +447,7 @@ async function uploadBounty(
     .select('id')
     .eq(
       'id',
-      String(
-        bounty.id
-      )
+      String(bounty.id)
     )
     .limit(1)
 
@@ -516,26 +461,19 @@ async function uploadBounty(
   }
 
   if (
-    Array.isArray(
-      deletedRows
-    ) &&
+    Array.isArray(deletedRows) &&
     deletedRows.length > 0
   ) {
     return false
   }
 
-  /*
-    Upload / update bounty.
-  */
   const {
     error,
   } = await supabase
     .from('bounties')
     .upsert(
       {
-        id: String(
-          bounty.id
-        ),
+        id: String(bounty.id),
         data: bounty,
       },
       {
@@ -555,18 +493,15 @@ async function uploadBounty(
   return true
 }
 
-/*
-  Create a new bounty locally
-  and upload it to Supabase.
-*/
-export function createLocalBounty(
-  draft
-) {
+export function createLocalBounty(draft) {
   const existing =
     readLocalBounties()
 
   const newBounty = {
     ...draft,
+
+    recipientType:
+      draft.recipientType || 'open',
 
     id: `bounty-${Date.now()}-${Math.random()
       .toString(36)
@@ -591,6 +526,8 @@ export function createLocalBounty(
 
     createdAt:
       new Date().toISOString(),
+
+    applications: [],
   }
 
   const updated = [
@@ -598,19 +535,9 @@ export function createLocalBounty(
     ...existing,
   ]
 
-  /*
-    Save locally first.
-  */
-  saveLocalBounties(
-    updated
-  )
+  saveLocalBounties(updated)
 
-  /*
-    Upload immediately.
-  */
-  uploadBounty(
-    newBounty
-  )
+  uploadBounty(newBounty)
     .then((uploaded) => {
       if (!uploaded) {
         console.error(
@@ -620,10 +547,6 @@ export function createLocalBounty(
         return
       }
 
-      /*
-        Tell the app that the bounty
-        is now synced.
-      */
       window.dispatchEvent(
         new CustomEvent(
           'basebounty:bounties-synced'
@@ -640,17 +563,7 @@ export function createLocalBounty(
   return newBounty
 }
 
-/*
-  Delete bounty.
-
-  1. Validate ownership
-  2. Add ID to deleted_bounties
-  3. Delete from bounties
-  4. Delete from localStorage
-*/
-export async function deleteBounty(
-  id
-) {
+export async function deleteBounty(id) {
   const bountyId =
     String(id)
 
@@ -660,9 +573,8 @@ export async function deleteBounty(
   const bounty =
     bounties.find(
       (item) =>
-        String(
-          item.id
-        ) === bountyId
+        String(item.id) ===
+        bountyId
     )
 
   if (!bounty) {
@@ -695,9 +607,6 @@ export async function deleteBounty(
     }
   }
 
-  /*
-    Record deletion first.
-  */
   if (supabase) {
     const {
       error:
@@ -727,9 +636,6 @@ export async function deleteBounty(
       }
     }
 
-    /*
-      Delete from active bounties.
-    */
     const {
       error:
         bountyDeleteError,
@@ -755,24 +661,15 @@ export async function deleteBounty(
     }
   }
 
-  /*
-    Remove from this device.
-  */
   const updated =
     bounties.filter(
       (item) =>
-        String(
-          item.id
-        ) !== bountyId
+        String(item.id) !==
+        bountyId
     )
 
-  saveLocalBounties(
-    updated
-  )
+  saveLocalBounties(updated)
 
-  /*
-    Refresh the UI.
-  */
   window.dispatchEvent(
     new CustomEvent(
       'basebounty:bounties-synced'
@@ -784,9 +681,6 @@ export async function deleteBounty(
   }
 }
 
-/*
-  Draft functions.
-*/
 export function getDraft() {
   try {
     const saved =
@@ -798,9 +692,7 @@ export function getDraft() {
       return null
     }
 
-    return JSON.parse(
-      saved
-    )
+    return JSON.parse(saved)
   } catch (error) {
     console.error(
       'Could not load bounty draft:',
@@ -818,40 +710,10 @@ export function clearDraft() {
 }
 
 /*
-  Application functions.
+  Create application and sync it
+  inside the shared bounty record.
 */
-export function getApplications() {
-  try {
-    const saved =
-      localStorage.getItem(
-        APPLICATIONS_KEY
-      )
-
-    if (!saved) {
-      return []
-    }
-
-    const parsed =
-      JSON.parse(
-        saved
-      )
-
-    return Array.isArray(
-      parsed
-    )
-      ? parsed
-      : []
-  } catch (error) {
-    console.error(
-      'Could not load applications:',
-      error
-    )
-
-    return []
-  }
-}
-
-export function createApplication(
+export async function createApplication(
   application
 ) {
   const applications =
@@ -874,12 +736,195 @@ export function createApplication(
       new Date().toISOString(),
   }
 
+  /*
+    Save locally immediately.
+  */
   localStorage.setItem(
     APPLICATIONS_KEY,
     JSON.stringify([
       ...applications,
       newApplication,
     ])
+  )
+
+  /*
+    Find the bounty locally.
+  */
+  const localBounty =
+    readLocalBounties().find(
+      (bounty) =>
+        String(
+          bounty.id
+        ) ===
+        String(
+          application.bountyId
+        )
+    )
+
+  if (!localBounty) {
+    return newApplication
+  }
+
+  const currentApplications =
+    Array.isArray(
+      localBounty.applications
+    )
+      ? localBounty.applications
+      : []
+
+  const updatedApplications = [
+    ...currentApplications,
+    newApplication,
+  ]
+
+  const updatedBounty = {
+    ...localBounty,
+    applications:
+      updatedApplications,
+  }
+
+  /*
+    Update local bounty.
+  */
+  const updatedBounties =
+    readLocalBounties().map(
+      (bounty) =>
+        String(bounty.id) ===
+        String(
+          application.bountyId
+        )
+          ? updatedBounty
+          : bounty
+    )
+
+  saveLocalBounties(
+    updatedBounties
+  )
+
+  /*
+    Sync application to Supabase.
+  */
+  if (supabase) {
+    const {
+      data: remoteRow,
+      error: fetchError,
+    } = await supabase
+      .from('bounties')
+      .select('id, data')
+      .eq(
+        'id',
+        String(
+          application.bountyId
+        )
+      )
+      .maybeSingle()
+
+    if (fetchError) {
+      console.error(
+        'Could not fetch bounty for application sync:',
+        fetchError
+      )
+
+      throw fetchError
+    }
+
+    if (remoteRow) {
+      const remoteBounty =
+        remoteRow.data &&
+        typeof remoteRow.data ===
+          'object'
+          ? remoteRow.data
+          : {}
+
+      const remoteApplications =
+        Array.isArray(
+          remoteBounty.applications
+        )
+          ? remoteBounty.applications
+          : []
+
+      const alreadyExists =
+        remoteApplications.some(
+          (item) =>
+            String(item.id) ===
+            String(
+              newApplication.id
+            )
+        )
+
+      const finalApplications =
+        alreadyExists
+          ? remoteApplications
+          : [
+              ...remoteApplications,
+              newApplication,
+            ]
+
+      const updatedRemoteBounty = {
+        ...remoteBounty,
+        id:
+          remoteBounty.id ||
+          remoteRow.id,
+        applications:
+          finalApplications,
+      }
+
+      const {
+        error: updateError,
+      } = await supabase
+        .from('bounties')
+        .upsert(
+          {
+            id:
+              String(
+                remoteRow.id
+              ),
+            data:
+              updatedRemoteBounty,
+          },
+          {
+            onConflict:
+              'id',
+          }
+        )
+
+      if (updateError) {
+        console.error(
+          'Could not sync application to Supabase:',
+          updateError
+        )
+
+        throw updateError
+      }
+
+      /*
+        Refresh local data from the
+        shared Supabase record.
+      */
+      saveLocalBounties(
+        readLocalBounties().map(
+          (bounty) =>
+            String(bounty.id) ===
+            String(
+              application.bountyId
+            )
+              ? updatedRemoteBounty
+              : bounty
+        )
+      )
+    }
+  }
+
+  window.dispatchEvent(
+    new CustomEvent(
+      'basebounty:applications-synced'
+    )
+  )
+
+  window.dispatchEvent(
+    new CustomEvent(
+      'basebounty:bounties-synced'
+    )
   )
 
   return newApplication
